@@ -1,0 +1,7 @@
+.textStyle{
+    @apply text-white text-sm
+}
+
+.iconStyle{
+    @apply text-white text-xl
+}
