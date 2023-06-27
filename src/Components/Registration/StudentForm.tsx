@@ -5,12 +5,19 @@ import { studentAuth } from "../../domain/models/student";
 import { api } from "../../services/axios";
 import { validate } from "./Validate";
 import { useNavigate } from "react-router-dom";
+
 function StudentForm() {
   const navigate = useNavigate();
   const [student,setStudent] = useState<studentAuth>({fname:'',lname:'',username:'',email:'',password:'',confirm_password:''});
   const [errors,setErrors] = useState({fname:'',lname:'',username:'',email:'',password:'',cpassword:''});
 
+  // const addStudent = ((e: React.MouseEventHandler<HTMLInputElement>)=>{
+  //   validate(e.target.name, e.target.value, errors,setErrors,student.password)
+  //   setStudent({...student,[e.target.name]:e.target.value});
+  //   // validate(e.target.name, e.target.value, errors,setErrors,student.password)
+  // })
   const addStudent = ((e: React.ChangeEvent<HTMLInputElement>)=>{
+    // validate(e.target.name, e.target.value, errors,setErrors,student.password)
     setStudent({...student,[e.target.name]:e.target.value});
     validate(e.target.name, e.target.value, errors,setErrors,student.password)
   })
@@ -18,7 +25,12 @@ function StudentForm() {
   const handleSignup =  async(e:React.FormEvent) =>{
     e.preventDefault();
     try{
-      const {data} = await api.post('/register',{...student},{withCredentials:true})
+      const {fname,lname,username,email,password,confirm_password} = student
+      if(fname!=='' && lname!=='' && username!=='' && email!=='' && password!=='' && confirm_password!==''){
+        const {fname,lname,username,email,password,cpassword} = errors
+        if(fname === '' && lname === '' && username === '' &&email === '' && password === '' && cpassword  === ''){
+
+          const {data} = await api.post('/register',{...student},{withCredentials:true})
       console.log('data',data);
 
       if(data.student){
@@ -27,16 +39,36 @@ function StudentForm() {
       else{
         navigate('/registration');
       }
-      
+        }
+      }
     }
     catch(err){
        console.log(err);
        
     }
   }
+  // const handleSignup =  async(e:React.FormEvent) =>{
+  //   e.preventDefault();
+  //   try{
+  //     const {data} = await api.post('/register',{...student},{withCredentials:true})
+  //     console.log('data',data);
+
+  //     if(data.student){
+  //       navigate('/login');
+  //     }
+  //     else{
+  //       navigate('/registration');
+  //     }
+      
+  //   }
+  //   catch(err){
+  //      console.log(err);
+       
+  //   }
+  // }
   return (
     <div className="max-w-lg mb-7 flex items-center justify-center  border border-gray-300 rounded-md bg-white mx-4 sm:mx-auto ">
-      <form action="" className=" w-full p-6" >
+      <form action="" className=" w-full p-6" onSubmit={handleSignup}>
         <div className="block md:flex md:space-x-4">
           <div className="mb-3">
             <label htmlFor="formInputControl1" className="text-sm">
@@ -49,6 +81,7 @@ function StudentForm() {
               className="inputStyle"
               required
               onChange={addStudent}
+              // onClick={addStudent}
             />
             <p className="text-red-600 text-sm">{errors.fname}</p>
           </div>
@@ -70,12 +103,12 @@ function StudentForm() {
 
         <div className="block md:flex md:space-x-4 mb-3 w-full">
         <div className="md:w-1/2 mb-3">
-            <label htmlFor="formInputControl1" className="text-sm">
+            <label htmlFor="formInputControl3" className="text-sm">
             Username*
             </label>
             <input
               type="text"
-              id="formInputControl1"
+              id="formInputControl3"
               name="username"
                className="inputStyle"
                required
@@ -84,12 +117,12 @@ function StudentForm() {
             <p className="text-red-600 text-sm">{errors.username}</p>
           </div>
           <div className="md:w-1/2 mb-3">
-            <label htmlFor="formInputControl2" className="text-sm">
+            <label htmlFor="formInputControl4" className="text-sm">
              Email*
             </label>
             <input
               type="email"
-              id="formInputControl2"
+              id="formInputControl4"
               name="email"
                className="inputStyle"
                required
@@ -101,12 +134,12 @@ function StudentForm() {
 
         <div className="block md:flex md:space-x-4 mb-3 w-full">
         <div className="md:w-1/2 mb-3">
-            <label htmlFor="formInputControl1" className="text-sm">
+            <label htmlFor="formInputControl5" className="text-sm">
             Password*
             </label>
             <input
               type="password"
-              id="formInputControl1"
+              id="formInputControl5"
               name="password"
               className="inputStyle"  
               required
@@ -115,12 +148,12 @@ function StudentForm() {
             <p className="text-red-600 text-sm">{errors.password}</p>
           </div>
           <div className="md:w-1/2 mb-3">
-            <label htmlFor="formInputControl2" className="text-sm">
+            <label htmlFor="formInputControl6" className="text-sm">
              Confirm Password*
             </label>
             <input
               type="password"
-              id="formInputControl2"
+              id="formInputControl6"
               name="confirm_password"
               className="inputStyle"
               required
@@ -131,7 +164,7 @@ function StudentForm() {
         </div>
         <div className="block justify-center mb-4  mt-7 md:mt-4">
             <button className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out"
-            onClick={handleSignup}>
+            >
               Sign Up
             </button>
           </div>

@@ -1,22 +1,22 @@
-export const validate = (name:string,value:string,err:object,setErr:Function,pw:string): void =>{
-   if(name === 'fname'){
-     fnameValidate(value,err,setErr);
-   }
-   if(name === 'lname'){
-    lnameValidate(value,err,setErr);
-   }
-   if(name === 'username'){
-    usernameValidate(value,err,setErr);
-   }
-   if(name === 'email'){
-    emailValidate(value,err,setErr);
-   }
-   if(name === 'password'){
-    passwordValidate(value,err,setErr);
-   }
-   if(name === 'confirm_password'){
-    cpasswordValidate(value,err,setErr,pw);
-   }
+export const tutorValidate = (name:string,value:string,err:object,setErr:Function,pw:string):void=>{
+    if(name === 'fname'){
+        fnameValidate(value,err,setErr);
+      }
+      if(name === 'lname'){
+       lnameValidate(value,err,setErr);
+      }
+      if(name === 'username'){
+       usernameValidate(value,err,setErr);
+      }
+      if(name === 'email'){
+       emailValidate(value,err,setErr);
+      }
+      if(name === 'password'){
+       passwordValidate(value,err,setErr);
+      }
+      if(name === 'confirm_password'){
+       cpasswordValidate(value,err,setErr,pw);
+      }
 }
 
 export const fnameValidate = (value:string,err:object,setErr:Function): void =>{
@@ -48,7 +48,7 @@ export const lnameValidate = (value:string,err:object,setErr:Function): void =>{
 export const usernameValidate = (value:string,err:object,setErr:Function): void =>{
     const usernameRegex : RegExp = /^[A-Za-z]{4,10}$/;
     if((value.trim()).length === 0){
-        setErr({...err,username:'Username field cannot be empty!'})
+        setErr({...err,lname:'Username field cannot be empty!'})
     }
     else if(!usernameRegex.test(value)){
         setErr({...err,username:'Enter a valid username'})

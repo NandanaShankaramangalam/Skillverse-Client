@@ -1,0 +1,20 @@
+
+.text-style{
+    @apply text-center  font-semibold md:font-thin text-black mb-2 md:text-5xl text-2xl
+}
+
+.img-style{
+    @apply w-full h-full object-cover
+}
+
+.icon{
+    @apply  text-sm md:text-xl text-black
+}
+
+.icon-style{
+    @apply inline-flex items-center justify-center h-5 w-5 md:h-8 md:w-8 bg-neon-green rounded-full mr-3
+}
+
+.quote-style{
+    @apply text-lg md:text-2xl font-thin mb-5
+}

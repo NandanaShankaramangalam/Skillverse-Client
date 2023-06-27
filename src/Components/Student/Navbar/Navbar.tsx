@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+import { studentLogged } from "../../../redux/student/studentSlice";
 function Navbar() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { studUsername, studEmail } = useSelector((state: any) => state.student);
   const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
   const [isBrowseOpen, setIsBrowseOpen] = useState<boolean>(false);
   const handleMenuToggle = (
@@ -15,11 +20,37 @@ function Navbar() {
   ): void => {
     setIsBrowseOpen(!isBrowseOpen);
   };
+
+  useEffect(() => {
+    const student = localStorage.getItem("student");
+    console.log("student=", student);
+    console.log('stud uname=',studUsername);
+    
+
+    if (student) {
+      const token = JSON.parse(student);
+      console.log("iii", token.token);
+      if (!token?.token) {
+        return navigate("/login");
+      }
+    }
+  }, []);
+
+  const handleLogout = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    console.log("kk");
+    localStorage.removeItem("student");
+    dispatch(studentLogged({}));
+    console.log("student logout");
+    navigate("/login");
+  };
   return (
     <div>
       <nav className="bg-custom-blue text-white flex items-center justify-between h-20 px-4 md:px-6">
         <div className="ml-3">
-          <h1 className="text-xl font-bold"><NavLink to='/'>Skillverse</NavLink></h1>
+          <h1 className="text-xl font-bold">
+            <NavLink to="/">Skillverse</NavLink>
+          </h1>
         </div>
         <div className="md:hidden">
           <button
@@ -59,9 +90,27 @@ function Navbar() {
             </button>
           </li>
           <li>
-            <button onClick={()=>navigate('/login')}>
-              <span>Login</span>
-            </button>
+            {studUsername ? (
+              <button onClick={handleLogout}>
+                <span>Logout {studUsername}</span>
+              </button>
+            ) : (
+              <button onClick={() => navigate("/login")}>
+                <span>Login {studUsername}</span>
+              </button>
+            )}
+
+
+{/* <button 
+      onClick={handleLogout}
+      >
+        <span>Logout {studUsername}</span>
+      </button> */}
+
+
+            {/* <button onClick={stud?()=>handleLogout:()=>navigate('/login')}>
+              <span>{stud?'Logout':'Login'}</span>
+            </button> */}
           </li>
         </ul>
       </nav>

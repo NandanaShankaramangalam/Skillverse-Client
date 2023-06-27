@@ -1,15 +1,17 @@
 import React from 'react' 
 import './Footer.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTwitter,faFacebook,faInstagram,faYoutube } from '@fortawesome/free-brands-svg-icons'
 function Footer() {
   return (
     <div className='mt-10 h-72 md:h-56 bg-custom-blue '>
     <div className='text-center block justify-center pt-8'>
           <span className='textStyle'>Follow us on:</span>
       <div className='space-x-4 mt-3'>
-        <i className="fa-brands fa-twitter iconStyle"></i>
-        <i className="fa-brands fa-facebook-f iconStyle"></i>
-        <i className="fa-brands fa-instagram iconStyle"></i>
-        <i className="fa-brands fa-youtube iconStyle"></i>  
+        <FontAwesomeIcon icon={faTwitter} className="iconStyle"/>
+        <FontAwesomeIcon icon={faFacebook} className="iconStyle"/>
+        <FontAwesomeIcon icon={faInstagram} className="iconStyle"/>
+        <FontAwesomeIcon icon={faYoutube} className="iconStyle"/>
       </div>
     </div>
     <div className='mt-5 grid grid-cols-1 place-items-center md:flex justify-center space-x-8'>
