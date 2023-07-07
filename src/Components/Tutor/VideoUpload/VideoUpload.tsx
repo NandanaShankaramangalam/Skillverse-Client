@@ -184,7 +184,11 @@ try{
 //         }
 //       }
     
+const [isOpen, setIsOpen] = useState(false);
 
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     // {/* // fixed top-8 right-8 flex items-center justify-center h-screen w-screen */}
@@ -233,14 +237,15 @@ try{
             </div> 
           </div>
           {/* bbbbbb */}
-          <div className="mb-1 mt-3 flex">
+
+          {/* <div className="mb-1 mt-3 flex">
           <div className="mr-4">
-              <label htmlFor="formInputControl2" className="block text-sm mb-1">
+              <label htmlFor="formInputControl3" className="block text-sm mb-1">
                 Category
               </label>
               <input
                 type="text"
-                id="formInputControl2"
+                id="formInputControl3"
                 className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                 name="fee"
                 // onChange={addData}
@@ -248,32 +253,141 @@ try{
               />
             </div> 
             
-
-
           <div>
-              <label htmlFor="formInputControl2" className="block text-sm mb-1">
+              <label htmlFor="formInputControl4" className="block text-sm mb-1">
                 Subcategory
               </label>
               <input
                 type="text"
-                id="formInputControl2"
+                id="formInputControl4"
                 className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                 name="fee"
                 // onChange={addData}
                 onChange={handleFeeChange}
               />
-            </div> 
-            
-             </div>
+            </div>  
+             </div> */}
+
+             {/* Category dropdown */}
+             <div className="mb-1 mt-3 flex gap-4">
+             <div className="relative inline-block text-left">
+              <span className="block text-sm mb-1">Category</span>
+             <label className="relative"><input
+                type="text"
+                id="formInputControl4"
+                className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                name="fee"
+                // onChange={addData}
+                onClick={toggleDropdown}
+              /> 
+              
+              <svg
+              className={`w-5 h-5 ml-2 transition-transform duration-200 absolute top-0 right-1 transform ${
+                isOpen ? 'rotate-180' : ''
+              }`}
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 12a1 1 0 01-.7-.3l-3.5-3.5a1 1 0 011.4-1.4L10 9.6l2.9-2.9a1 1 0 111.4 1.4l-3.5 3.5a1 1 0 01-.7.3z"
+                clipRule="evenodd"
+              />
+            </svg>
+             
+              </label>
+     
+      {isOpen && (
+        <div className="absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
+          <div className="py-1">
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Option 1
+            </a>
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Option 2
+            </a>
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Option 3
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+    {/* ghgvgvgvg */}
+    <div className="relative inline-block text-left">
+              <span className="block text-sm mb-1">Category</span>
+             <label className="relative"><input
+                type="text"
+                id="formInputControl4"
+                className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                name="fee"
+                // onChange={addData}
+                onClick={toggleDropdown}
+              /> 
+              
+              <svg
+              className={`w-5 h-5 ml-2 transition-transform duration-200 absolute top-0 right-1 transform ${
+                isOpen ? 'rotate-180' : ''
+              }`}
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 12a1 1 0 01-.7-.3l-3.5-3.5a1 1 0 011.4-1.4L10 9.6l2.9-2.9a1 1 0 111.4 1.4l-3.5 3.5a1 1 0 01-.7.3z"
+                clipRule="evenodd"
+              />
+            </svg>
+             
+              </label>
+     
+      {isOpen && (
+        <div className="absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
+          <div className="py-1">
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Option 1
+            </a>
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Option 2
+            </a>
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Option 3
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+    </div>
+
            {/* hkhhhh */}
          
           <div>
-            <label htmlFor="formInputControl3" className="block text-sm mb-1">
+            <label htmlFor="formInputControl5" className="block text-sm mb-1">
               Description
             </label>
             <textarea
               name="description"
-              id="formInputControl3"
+              id="formInputControl5"
               className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
               cols={30}
               rows={10}
