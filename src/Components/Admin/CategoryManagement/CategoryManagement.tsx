@@ -1,18 +1,30 @@
-import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faPenToSquare, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import React from 'react'
 import { validate } from './Validate';
 import { api } from '../../../services/axios';
-
+import AddSubcategory from './AddSubcategory';
+import EditCategory from './EditCategory';
 interface Category{
-    cate : string;
-    subcate : string;
+    category : string;
+    subcategory : string;
+}
+interface CategoryData{
+    category : string;
+    subcategory : string;
+    _id: string;
+    status:boolean;
 }
 function CategoryManagement() {
-    
+        const [data, setData] = useState<CategoryData[]>([]);
+        const [addData,setAddData] = useState({cid:'',catname:''})
+        // const [addData,setAddData] = useState({cid:'',catname:''})
+        // const [addData,setAddData] = useState('')
         const [isOpen, setIsOpen] = useState<boolean>(false);
-        const [category,setCategory] = useState<Category>({cate:'',subcate:''});
+        const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
+        const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+        const [categories,setCategory] = useState<Category>({category:'',subcategory:''});
         const [errors,setErrors] = useState({cate:'',subcate:''})
 
         const openModal = () => {
@@ -22,23 +34,69 @@ function CategoryManagement() {
         const closeModal = () => {
           setIsOpen(false);
         };
+
+        const openAddModal = (cid:string,catname:string) => {
+          // console.log('cid=',cid);
+          console.log('catname=',catname);
+          setAddData({...addData,catname:catname,cid:cid});
+          // setAddData(catname);
+          // setAddData({ cid: cid, catname: catname });
+          console.log('adddata',addData); 
+          setIsAddOpen(true);
+        };
+
+        const openEditModal = (cid:string,catname:string) => {
+          console.log('catname=',catname);
+          setAddData({...addData,catname:catname,cid:cid});
+          console.log('adddata',addData);  
+          setIsEditOpen(true);
+        };
       
+        const closeAddModal = () => {
+          setIsAddOpen(false);
+        };
+        
+        useEffect(() => { 
+          fetchData();
+          // console.log('hiii',addData);
+          
+        }, []);
+
+        const fetchData = async() => {
+          try{
+            const response = await api.get('/admin/show-category');
+            console.log('cate data res= ',response.data);
+            // setData(response.data.cateData)
+            setData(response.data.newArray)
+            console.log('dataaa=',data);
+            
+            // console.log('cat data',response.data.newArray[0].category);
+          }
+          catch(err){
+           console.error(err);
+          }
+       }
+
         const handleSubmit = async(e: React.FormEvent) => {
           e.preventDefault();
-          try{
+          console.log('aaa');
+          
+          try{  
+            const {category,subcategory} = categories;
+            // const category = categories.cate
+            // const subcategory = categories.subcate
+            console.log('cat=',categories);
             
-            
-            const {cate,subcate} = category;
-            console.log('cat=',category);
-            
-            if(cate!=='' && subcate!==''){
+            if(category!=='' && subcategory!==''){
                 console.log('cat=',category);
             const {cate,subcate} = errors;
             if(cate==='' && subcate===''){
                 console.log('mmmmm'); 
-                const {data} = await api.post('/admin/add-category',{...category},{withCredentials:true})
+                const {data} = await api.post('/admin/add-category',{...categories},{withCredentials:true})
                 // await api.post('/admin/add-category',{...category},{withCredentials:true})
+                console.log('add cat',data);
                 closeModal();
+                fetchData();
             } 
             }
            
@@ -46,12 +104,43 @@ function CategoryManagement() {
             console.log(err);    
          }
         };
-
+        
+        //Add Category
         const addCate = ((e:React.ChangeEvent<HTMLInputElement>)=>{
-            setCategory({...category,[e.target.name]:e.target.value});
+            setCategory({...categories,[e.target.name]:e.target.value});
             validate(e.target.name, e.target.value, errors,setErrors);
         })
-   
+        
+        //List Category
+        const handleList = async(e: React.MouseEvent<HTMLButtonElement>,id:string) =>{
+          e.preventDefault();
+          try{
+              const response = await api.post('/admin/list-category',{id}, { withCredentials: true })
+              console.log('rspnse',response.data);
+              fetchData();
+              
+          }catch(err){
+              console.log(err);
+              
+          }
+          console.log('iddd',id);
+        }
+
+
+        //Unlist Category
+        const handleUnlist = async(e: React.MouseEvent<HTMLButtonElement>,id:string) =>{
+          e.preventDefault();
+          try{
+              const response = await api.post('/admin/unlist-category',{id}, { withCredentials: true })
+              console.log('rspnse',response.data);
+              fetchData();
+              
+          }catch(err){
+              console.log(err);
+              
+          }
+          console.log('iddd',id);
+        }
   return (
     <div className='mt-5'>
         <div className='flex justify-end mr-11 mb-2'>
@@ -78,14 +167,50 @@ function CategoryManagement() {
                 <th scope="col" className="px-6 py-3">
                     <span className="sr-only">Actions</span>
                 </th>
+                <th scope="col" className="px-6 py-3">
+                    <span className="sr-only">Action</span>
+                </th>
             </tr>
         </thead>
         <tbody>
-           
+        {
+               data.map((item,index)=>(
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {index+1}
+                </th>
+                <td className="px-6 py-4">
+                   {item.category}
+                </td>
+                <td className="px-6 py-4">
+                   {item.subcategory.split(',').map(obj=><li>{obj}</li>)}
+                </td>
+                <td className="px-6 py-4">
+                  <div className='pt-1'>
+                <button onClick={()=>openAddModal(item._id, item.category)}><FontAwesomeIcon icon={faPlus} className='text-white text-sm bg-cyan-700 p-1 mr-8'></FontAwesomeIcon></button>
+                <button onClick={()=>openEditModal(item._id, item.category)}><FontAwesomeIcon icon={faPenToSquare} className='text-white text-sm bg-gray-700 p-1'/></button>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-right">
+                {/* <div className='pt-7 flex '>
+                <button><FontAwesomeIcon icon={faPlus} className='text-white text-sm bg-cyan-700 p-1 mr-4 '></FontAwesomeIcon></button>
+                  </div> */}
+                {
+
+                       item.status?
+                       <button className='rounded-full border px-7 py-2 border-green-600 bg-green-600 text-white' onClick={(e)=>handleList(e,item._id)}>List </button>
+                       :
+                       <button className='rounded-full border px-6 py-2 border-red-600 bg-red-600 text-white' onClick={(e)=>handleUnlist(e,item._id)}>Unlist</button>
+                    }
+                
+                </td>
+            </tr>
+               )) 
+            }
         </tbody>
     </table>
 </div>
-
+{/* Category Add Modal */}
 {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -100,13 +225,14 @@ function CategoryManagement() {
               
               <div className="mb-3 mt-3">
             <label htmlFor="formInputControl1" className="text-sm ">
+              {/* Category:{addData.catname} */}
               Category
             </label>
             <input
               type="text"
               id="formInputControl1"
               className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-              name="cate"
+              name="category"
               onChange={addCate}
             />
           </div>
@@ -120,7 +246,7 @@ function CategoryManagement() {
               type="text"
               id="formInputControl2"
               className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-              name="subcate"
+              name="subcategory"
               onChange={addCate}
             />
           </div>
@@ -135,6 +261,43 @@ function CategoryManagement() {
           </div>
         </div>
       )}
+
+      {/* SubCategory Add Modal */}
+      {/* {isAddOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            
+            <div className='flex justify-end'>
+                <button onClick={closeAddModal}><FontAwesomeIcon icon={faXmark}></FontAwesomeIcon></button>
+            </div>
+            
+            <form onSubmit={handleSubmit}>
+              
+              <div className="mb-3 mt-3">
+            <label htmlFor="formInputControl1" className="text-sm ">
+              Category
+            </label>
+            <input
+              type="text"
+              id="formInputControl1"
+              className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+              name="category"
+              onChange={addCate}
+            />
+          </div>
+          <p className="text-red-600 text-sm">{errors.cate}</p>
+
+              <div className='flex justify-center'>
+                <button className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
+                 Add
+                </button> 
+              </div>
+            </form>
+          </div>
+        </div>
+      )} */}
+      {isAddOpen && <AddSubcategory cid={addData.cid} catname={addData.catname} isAddOpen={isAddOpen} setIsAddOpen={setIsAddOpen} fetchData={fetchData}/>}
+      {isEditOpen && <EditCategory cid={addData.cid} catname={addData.catname} isEditOpen={isEditOpen} setIsEditOpen={setIsEditOpen} fetchData={fetchData}/>}
 </div> 
   )
 }

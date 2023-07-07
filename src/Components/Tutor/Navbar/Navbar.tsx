@@ -6,7 +6,7 @@ import { tutorLogged } from '../../../redux/tutor/tutorSlice';
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const{tutUsername,tutEmail} = useSelector((state:any)=>state.tutor)
+  const{tutUsername,tutEmail,tutId} = useSelector((state:any)=>state.tutor)
     useEffect(() => {
         const tutor = localStorage.getItem('tutor');
         console.log('tutor=',tutor);
@@ -82,8 +82,11 @@ function Navbar() {
       </button> */}
 
       <button onClick={tutUsername?handleLogout:()=>navigate('/tutor/login')}>
-        <span>{tutUsername?'Logout':'Login'} {tutUsername}</span>
+        <span>{tutUsername?'Logout':'Login'}</span>
       </button>
+      {
+      tutUsername && <button className='ml-2' onClick={()=>navigate(`/tutor/profile`)}><span>{tutUsername}</span></button>
+      }
     </li>
   </ul>
 </nav>

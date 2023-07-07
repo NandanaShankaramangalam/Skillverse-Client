@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const INITIAL_STATE = {
     tutUsername : '',
     tutEmail: '',
+    tutId: '',
 
 }
 
@@ -13,6 +14,7 @@ const tutorSlice = createSlice({
         tutorLogged : (state,action)=>{
             state.tutUsername = action.payload.tutUsername
             state.tutEmail = action.payload.tutEmail
+            state.tutId = action.payload.tutId
         }
     }
 })

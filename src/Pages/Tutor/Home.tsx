@@ -1,11 +1,14 @@
 import React from 'react'
 import Navbar from '../../Components/Tutor/Navbar/Navbar'
+import Home from '../../Components/Tutor/Home/Home'
+import Footer from '../../Components/Footer/Footer'
 
 function TutorHome() {
   return (
     <div>
       <Navbar/>
-      <h1>Home</h1>
+      {/* <Home/> */}
+      {/* <Footer/> */}
     </div>
   )
 }

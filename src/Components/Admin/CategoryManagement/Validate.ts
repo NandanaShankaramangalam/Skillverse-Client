@@ -11,7 +11,7 @@ export const validate = (name:string,value:string,err:object,setErr:Function): v
  
 
  export const cateValidate = (value:string,err:object,setErr:Function): void =>{
-    const cateRegex : RegExp = /^[A-Za-z ]{4,10}$/;
+    const cateRegex : RegExp = /^[A-Za-z ]{3,20}$/;
     if((value.trim()).length === 0){
         setErr({...err,cate:'Category field cannot be empty!'})
     }
@@ -24,7 +24,8 @@ export const validate = (name:string,value:string,err:object,setErr:Function): v
  }
 
  export const subcateValidate = (value:string,err:object,setErr:Function): void =>{
-    const subcateRegex : RegExp = /^[A-Za-z ]{4,10}$/;
+    // const subcateRegex : RegExp = /^[A-Za-z, ]{3,20}$/;
+    const subcateRegex : RegExp = /^([a-zA-z])([a-zA-Z,\s])+([^(?=.*,\s$)])$/gm
     if((value.trim()).length === 0){
         setErr({...err,subcate:'Subcategory field cannot be empty!'})
     }

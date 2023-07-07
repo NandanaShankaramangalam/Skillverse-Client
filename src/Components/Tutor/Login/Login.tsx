@@ -46,7 +46,7 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
 
                 }
                 else{
-                  navigate('/tutor/home');
+                  navigate('/tutor/dashboard');
                   console.log('home');
                 }
        }else{
@@ -75,12 +75,12 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
           console.log('tutor data=',data.tutor);
           if(data.tutor?.username && data.tutor?.email)
           // dispatch(tutorLogged({username:data.tutor.username,email:data.tutor.email}))
-          dispatch(tutorLogged({tutUsername:data.tutor.username,tutEmail:data.tutor.email}))
+          dispatch(tutorLogged({tutUsername:data.tutor.username,tutEmail:data.tutor.email,tutId:data.tutor._id}))
   if(data.tutor){ 
     console.log('aaa');
     
       localStorage.setItem('tutor',JSON.stringify(data))
-      navigate('/tutor/home');
+      navigate('/tutor/dashboard');
   }
   if(data.invalid){    
    setErr({...err,invalid:data.invalid,password:''})
