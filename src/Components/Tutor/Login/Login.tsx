@@ -15,6 +15,7 @@ interface ErrState {
   invalid?: string;
   password?: string;
   email?: string;
+  block?:string;
 }
 function Login(props: LoginProps) {
 const navigate = useNavigate();
@@ -72,6 +73,8 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
       }
      else {
           const {data} = await api.post('/tutor/tutor-login',{...tutor}, { withCredentials: true });
+          console.log('tutor res=',data.block);
+          setErr((prevState) => ({ ...prevState, block: data.block }));
           console.log('tutor data=',data.tutor);
           if(data.tutor?.username && data.tutor?.email)
           // dispatch(tutorLogged({username:data.tutor.username,email:data.tutor.email}))
@@ -248,7 +251,7 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
           </div>
 
           <div
-            className={`flex justify-center  ${err.invalid ? "mb-2" : "mb-5"}`}
+            className={`flex justify-center  ${err.invalid ? "mb-2" : err.block ? "mb-2" : "mb-5"}`}
           >
             <button
               className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out"
@@ -264,6 +267,9 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
           </div>
           {err.invalid && (
             <p className="text-red-600 text-sm mb-1">{err.invalid}</p>
+          )}
+          {err.block && (
+            <p className="text-red-600 text-sm mb-1">{err.block}</p>
           )}
           <div className="flex items-center justify-center">
             <div className="flex-grow">

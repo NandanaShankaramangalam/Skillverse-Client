@@ -107,7 +107,7 @@ function AddProfile(props:ProfileProps) {
               console.log('File loc:', fileLoc);
               
               const result = await api.post('/tutor/add-profile',{fileLocation,description,tutId},{ withCredentials: true })
-              console.log('rseult=',result);
+              console.log('result=',result);
               
             })
             .send((err,data) => {

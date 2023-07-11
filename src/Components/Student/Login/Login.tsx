@@ -16,6 +16,7 @@ interface ErrState {
   invalid?: string;
   password?: string;
   email?: string;
+  block?:string
 }
 function Login(props: LoginProps) {
   console.log("prop=", props.userType);
@@ -104,6 +105,7 @@ function Login(props: LoginProps) {
      else {
           const {data} = await api.post('/student-login',{...student}, { withCredentials: true });
           console.log('stud data=',data);
+          setErr((prevState) => ({ ...prevState, block: data.block }));
           if(data.student?.username && data.student?.email){
             dispatch(studentLogged({studUsername:data.student.username,studEmail:data.student.email}))
           }
@@ -184,7 +186,7 @@ function Login(props: LoginProps) {
           </div>
 
           <div
-            className={`flex justify-center  ${err.invalid ? "mb-2" : "mb-5"}`}
+            className={`flex justify-center  ${err.invalid ? "mb-2" : err.block ? "mb-2" : "mb-5"}`}
           >
             <button
               className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out"
@@ -200,6 +202,9 @@ function Login(props: LoginProps) {
           </div>
           {err.invalid && (
             <p className="text-red-600 text-sm mb-1">{err.invalid}</p>
+          )}
+          {err.block && (
+            <p className="text-red-600 text-sm mb-1">{err.block}</p>
           )}
           <div className="flex items-center justify-center">
             <div className="flex-grow">

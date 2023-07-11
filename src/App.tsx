@@ -13,11 +13,17 @@ import TutorManagement from "./Pages/Admin/TutorManagement";
 import CategoryManagement from "./Pages/Admin/CategoryManagement";
 import TutorDashboard from "./Pages/Tutor/Dashboard";
 import VideoUpload from "./Components/Tutor/VideoUpload/VideoUpload";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ViewProfile from "./Components/Tutor/Profile/ViewProfile";
+import CourseList from "./Components/Student/courseList";
+import StudentProfile from "./Pages/Student/Profile";
+import Profile from "./Components/Student/Profile";
 
 function App() {
+  
   const { tutId } = useSelector((state: any) => state.tutor);
+  const{selectedCategory} = useSelector((state:any)=>state.student)
+  const category = localStorage.getItem('category');
   return (
     <div>
       <Router>
@@ -25,6 +31,8 @@ function App() {
           <Route path="/" Component={Home} />
           <Route path="/login" Component={LoginForm} />
           <Route path="/registration" Component={RegistrationForm} />
+          <Route path={`/course-list/${selectedCategory}`} Component={CourseList} />
+          {/* <Route path="/profile" Component={Profile} /> */}
 
           <Route path='/admin/login' Component={AdminLoginForm}/>
           <Route path="/admin/dashboard" Component={AdminDashboard}/>

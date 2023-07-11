@@ -36,3 +36,13 @@ export const myBucket = new AWS.S3({
 })
 
 export const s3URL = `https://s3.amazonaws.com/${S3_BUCKET}`
+
+
+
+
+
+
+
+
+
+

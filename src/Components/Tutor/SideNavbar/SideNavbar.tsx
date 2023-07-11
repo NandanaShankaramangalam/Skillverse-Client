@@ -1,8 +1,10 @@
 import { faBook, faCalendar, faCoins, faMessage, faUser, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 function SideNavbar() {
+  const{tutUsername,tutEmail,tutId} = useSelector((state:any)=>state.tutor)
   return (
     <div>
         <div className='text-center mt-5'>
@@ -10,7 +12,7 @@ function SideNavbar() {
            <img src="./images/photo.jpg" alt="" /> 
            </div>
            <div className='mt-2'>
-            <h1 className='text-xl text-slate-950'>Nandana</h1>
+            <h1 className='text-xl text-slate-950'>{tutUsername}</h1>
            </div>
            <div className='mt-1 mb-2'>
             <h1 className='text-sm text-gray-800'>Artist and Designer</h1>

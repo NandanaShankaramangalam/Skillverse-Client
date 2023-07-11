@@ -4,19 +4,29 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { studentLogged } from "../../../redux/student/studentSlice";
+import { api } from "../../../services/axios";
+
+interface CategoryData{
+  category : string;
+  subcategory : [string];
+  _id: string;
+  status:boolean;
+}
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { studUsername, studEmail } = useSelector((state: any) => state.student);
   const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
   const [isBrowseOpen, setIsBrowseOpen] = useState<boolean>(false);
+  const [catData,setCatData] = useState<CategoryData[]>([]);
+
   const handleMenuToggle = (
     event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     setIsMenuVisible(!isMenuVisible);
   };
   const handleBrowseToggle = (
-    event: React.MouseEvent<HTMLButtonElement>
+    e: React.MouseEvent<HTMLButtonElement>
   ): void => {
     setIsBrowseOpen(!isBrowseOpen);
   };
@@ -25,7 +35,7 @@ function Navbar() {
     const student = localStorage.getItem("student");
     console.log("student=", student);
     console.log('stud uname=',studUsername);
-    
+    fetchCatData();
 
     if (student) {
       const token = JSON.parse(student);
@@ -35,6 +45,21 @@ function Navbar() {
       }
     }
   }, []);
+
+  const fetchCatData = async() => {
+    try{
+      const response = await api.get('/show-category');
+      console.log('cate data res tut= ',response.data);
+      // setData(response.data.cateData)
+      setCatData(response.data.newArray)
+      console.log('catdataaa=',catData);
+      
+      // console.log('cat data',response.data.newArray[0].category);
+    }
+    catch(err){
+     console.error(err);
+    }
+ }
 
   const handleLogout = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -85,28 +110,37 @@ function Navbar() {
             </button>
           </li>
           <li>
-            <button onClick={handleBrowseToggle}>
+            <button onClick={(e)=>handleBrowseToggle(e)}>
               <span>Browse</span>
             </button>
           </li>
           <li>
+          {/* <button onClick={studUsername?handleLogout:()=>navigate('/login')}>
+        <span>{studUsername?'Logout':'Login'}</span>
+      </button>
+      {
+      studUsername && <button className='ml-2' onClick={()=>navigate(`/profile`)}><span>{studUsername}</span></button>
+      } */}
+
             {studUsername ? (
               <button onClick={handleLogout}>
-                <span>Logout {studUsername}</span>
+                <span>Logout</span>
               </button>
             ) : (
               <button onClick={() => navigate("/login")}>
                 <span>Login {studUsername}</span>
               </button>
             )}
-
+             {
+      studUsername && <button className='ml-2' onClick={()=>navigate('/profile')}><span>{studUsername}</span></button>
+      } 
 
 {/* <button 
       onClick={handleLogout}
       >
         <span>Logout {studUsername}</span>
-      </button> */}
-
+      </button>
+ */}
 
             {/* <button onClick={stud?()=>handleLogout:()=>navigate('/login')}>
               <span>{stud?'Logout':'Login'}</span>
@@ -117,8 +151,26 @@ function Navbar() {
       {isBrowseOpen && (
         <div className="hidden md:block fixed top-20 right-4 mt-2 bg-slate-300 text-gray-800  h-40 w-40 ps-2 rounded overflow-y-auto ml-auto">
           <ul className="mt-2">
-            <li>Category1</li>
-            <li>Category2</li>
+          {
+            catData.map((item,index)=>{
+              return(
+                <li key={item._id}>
+              <button
+              // onClick={(e)=>handleCategory(e,item.category)}
+              onClick={()=>{
+                localStorage.setItem('category',item.category);
+              navigate(`/course-list/${item.category}`); 
+              dispatch(studentLogged({selectedCategory:item.category}))
+            }}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              {item.category}
+            </button>
+              </li>
+            )})
+            }
+            {/* <li>Category1</li> */}
+            {/* <li>Category2</li>
             <li>Category3</li>
             <li>Category1</li>
             <li>Category2</li>
@@ -128,7 +180,7 @@ function Navbar() {
             <li>Category3</li>
             <li>Category1</li>
             <li>Category2</li>
-            <li>Category3</li>
+            <li>Category3</li> */}
           </ul>
         </div>
       )}

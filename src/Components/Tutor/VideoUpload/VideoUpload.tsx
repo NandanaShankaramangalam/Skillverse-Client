@@ -1,15 +1,18 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../../../services/axios";
 import ReactS3Client from 'react-aws-s3-typescript';
 import AWS from 'aws-sdk'
-
+import { myBucket } from '../../../s3Config';
 // import ReactS3 from 'react-aws-s3';
 import {s3Config} from '../../../s3Config'
+import courseValidate from "./CourseValidate";
+import { useSelector } from "react-redux";
 
 interface VideoUpload {
-  setIsOpen: Function;
+  // setIsOpen: Function;
+  setIsOpen: (value: boolean) => void;
 }
 interface UploadDetails{
     title:string;
@@ -18,18 +21,28 @@ interface UploadDetails{
     course:File | null;
     thumbnail:File | null;
 }
-const S3_BUCKET ='skillverse-bucket';
-const REGION ='ap-south-1';
 
-AWS.config.update({
-  accessKeyId: 'AKIAWU6TXFWYWDMHWFEK',
-  secretAccessKey: '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'
-})
+interface CategoryData{
+  category : string;
+  subcategory : [string];
+  _id: string;
+  status:boolean;
+}
+// const S3_BUCKET ='skillverse-bucket';
+// const REGION ='ap-south-1';
 
-const myBucket = new AWS.S3({
-  params: { Bucket: S3_BUCKET},
-  region: REGION,
-})
+// AWS.config.update({
+//   accessKeyId: 'AKIAWU6TXFWYWDMHWFEK',
+//   secretAccessKey: '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'
+// })
+
+// const myBucket = new AWS.S3({
+//   params: { Bucket: S3_BUCKET},
+//   region: REGION,
+// })
+
+
+
 // const config = {
 //   bucketName: 'skillverse-bucket',
 //   region: 'ap-south-1',
@@ -43,17 +56,41 @@ function VideoUpload(props: VideoUpload) {
     const [selectedVideo, setSelectedVideo] = useState<File>(new File([], '')); // Initialize with an empty File object
     // const [selectedVideo, setSelectedVideo] = useState<File | null>(null); // Initialize with an empty File object
 
-    const [selectedThumbnail, setSelectedThumbnail] = useState<File | null>(null);
+    const [selectedThumbnail, setSelectedThumbnail] = useState<File>(new File([], ''))
     const [title, setTitle] = useState('');
     const [fee, setFee] = useState('');
     const [description, setDescription] = useState('');
+    const [category,setCategory] = useState('');
+    const [subcategory,setSubcategory] = useState<string[]>([]);
+    const [catData,setCatData] = useState<CategoryData[]>([]);
+    const [err,setErr] = useState({title:'',fee:'',category:'',subcate:'',description:'',thumbnail:'',video:''})
+    const { tutId } = useSelector((state: any) => state.tutor);
+    useEffect(()=>{
+      fetchCatData();
+    },[])
 
-    
-
+    const fetchCatData = async() => {
+      try{
+        const response = await api.get('/tutor/show-category');
+        console.log('cate data res tut= ',response.data);
+        // setData(response.data.cateData)
+        setCatData(response.data.newArray)
+        console.log('catdataaa=',catData);
+        
+        // console.log('cat data',response.data.newArray[0].category);
+      }
+      catch(err){
+       console.error(err);
+      }
+   }
     // const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     const file: File | null = e.target.files?.[0] || null;
     //     setSelectedVideo(file);
     //   };
+
+
+
+
     const uploadFile = (e:React.MouseEvent<HTMLButtonElement>,file:any) => {
       e.preventDefault();
 try{
@@ -62,7 +99,7 @@ try{
   const params = {
           // ACL: 'public-read',
           Body: file,
-          Bucket: S3_BUCKET,
+          Bucket: s3Config.bucketName,
           Key: `videos/${file.name}`
       };
 
@@ -87,6 +124,8 @@ try{
   }
 
 
+
+
     const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       // const file: File | null = e.target.files?.[0] || null;
       const file: File | null = e.target.files?.[0] || null;
@@ -100,7 +139,9 @@ try{
     
       const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file: File | null = e.target.files?.[0] || null;
-        setSelectedThumbnail(file);
+        console.log('file',file);
+        setSelectedThumbnail(file as File);
+        console.log('sel thumb = ',selectedThumbnail)
       };
     
       const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,18 +161,49 @@ try{
       const handleVideoUpload = async(e: React.FormEvent)=>{
         e.preventDefault()
         try{
-          const s3 = new ReactS3Client(s3Config);
+          // const s3 = new ReactS3Client(s3Config);
+          const s3 = new AWS.S3({
+            accessKeyId: s3Config.accessKeyId,
+            secretAccessKey: s3Config.secretAccessKey,
+            region: s3Config.region,
+          });
 
-          const videoFile = `video-${new Date().getTime()}`;
-          const imageFile = `image-${new Date().getTime()}`;
+          // const videoFile = `video-${new Date().getTime()}`;
+          // const thumbnailFile = `image-${new Date().getTime()}`;
+          const videoFile = `videos/${selectedVideo.name}`;
+          const thumbnailFile = `thumbnails/${selectedThumbnail.name}`;
+      
           console.log('kkkkkk');
           
+          const videoParams: AWS.S3.PutObjectRequest = {
+            Bucket: s3Config.bucketName,
+            Key: videoFile,
+            Body: videoFile as AWS.S3.Body,
+            // ACL: 'public-read', // Set the desired access control level for the uploaded file
+          };
+          const thumbnailParams: AWS.S3.PutObjectRequest = {
+            Bucket: s3Config.bucketName,
+            Key: thumbnailFile,
+            Body: thumbnailFile as AWS.S3.Body,
+            // ACL: 'public-read', // Set the desired access control level for the uploaded file
+          };
+      
           // const res = await s3.uploadFile(selectedVideo, videoFile);
           // const res = await s3.uploadFile(selectedVideo, config.bucketName);
           // const res = await S3FileUpload.uploadFile(selectedVideo, s3Config)
-          const res = await s3.uploadFile(selectedVideo, videoFile)
+          //correct below
+          // const res = await s3.uploadFile(selectedVideo, videoFile)
+          const videoRes = await s3.upload(videoParams).promise();
+          const thumbnailRes = await s3.upload(thumbnailParams).promise();
            
-            console.log('vdo res=',res);
+            console.log('vdo res=',videoRes);
+            console.log('thumb res=',thumbnailRes);
+            const videoFileLocation = `${videoParams.Key}`;
+            const thumbnailFileLocation = `${thumbnailParams.Key}`;
+            if(videoFileLocation && thumbnailFileLocation){
+              const result = await api.post('/tutor/create-course',{videoFileLocation,thumbnailFileLocation,title,fee,category,subcategory,description,tutId},{ withCredentials: true })
+              console.log('result=',result);
+            }
         }catch (exception) {
           console.log(exception);
           /* handle the exception */
@@ -184,11 +256,37 @@ try{
 //         }
 //       }
     
-const [isOpen, setIsOpen] = useState(false);
+const [isCatOpen, setIsCatOpen] = useState(false);
+const [isSubcatOpen, setIsSubcatOpen] = useState(false);
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    setIsCatOpen(!isCatOpen);
   };
+  const toggleSubcatDropdown = () => {
+    setIsSubcatOpen(!isSubcatOpen);
+  };
+  const handleCategory = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>,cat:string) => {
+    e.preventDefault();
+    setCategory(cat);
+    setIsCatOpen(false);
+  }
+  const handleSubcategory = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>,cat:[string]) => {
+    e.preventDefault();
+    setSubcategory(cat);
+    setIsSubcatOpen(false);
+  }
+  const handleCourseCreation = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    courseValidate(title,fee,description,category,subcategory,selectedThumbnail,selectedVideo,err,setErr)
+    console.log('err=',err);
+    if(err.title === '' && err.fee === '' && err.description === '' && err.category === '' && err.subcate === '' && err.thumbnail === '' && err.video === ''){
+     console.log('nsn');
+     
+      handleVideoUpload(e);
+    console.log('nummm');
+    
+    }
+  }
 
   return (
     // {/* // fixed top-8 right-8 flex items-center justify-center h-screen w-screen */}
@@ -220,7 +318,9 @@ const [isOpen, setIsOpen] = useState(false);
                 // onChange={addData}
                 onChange={handleTitleChange}
               />
+              <p className="text-red-600 text-sm mb-3">{err.title}</p>
             </div>
+            
 
             <div>
               <label htmlFor="formInputControl2" className="block text-sm mb-1">
@@ -234,56 +334,30 @@ const [isOpen, setIsOpen] = useState(false);
                 // onChange={addData}
                 onChange={handleFeeChange}
               />
+              <p className="text-red-600 text-sm mb-3">{err.fee}</p>
             </div> 
           </div>
           {/* bbbbbb */}
 
-          {/* <div className="mb-1 mt-3 flex">
-          <div className="mr-4">
-              <label htmlFor="formInputControl3" className="block text-sm mb-1">
-                Category
-              </label>
-              <input
-                type="text"
-                id="formInputControl3"
-                className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                name="fee"
-                // onChange={addData}
-                onChange={handleFeeChange}
-              />
-            </div> 
-            
-          <div>
-              <label htmlFor="formInputControl4" className="block text-sm mb-1">
-                Subcategory
-              </label>
-              <input
-                type="text"
-                id="formInputControl4"
-                className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                name="fee"
-                // onChange={addData}
-                onChange={handleFeeChange}
-              />
-            </div>  
-             </div> */}
 
              {/* Category dropdown */}
              <div className="mb-1 mt-3 flex gap-4">
              <div className="relative inline-block text-left">
               <span className="block text-sm mb-1">Category</span>
-             <label className="relative"><input
+             <label className="relative">
+              <input
                 type="text"
                 id="formInputControl4"
                 className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                 name="fee"
                 // onChange={addData}
                 onClick={toggleDropdown}
+                value={category}
               /> 
               
               <svg
               className={`w-5 h-5 ml-2 transition-transform duration-200 absolute top-0 right-1 transform ${
-                isOpen ? 'rotate-180' : ''
+                isCatOpen ? 'rotate-180' : ''
               }`}
               fill="currentColor"
               viewBox="0 0 20 20"
@@ -298,46 +372,43 @@ const [isOpen, setIsOpen] = useState(false);
              
               </label>
      
-      {isOpen && (
-        <div className="absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
+      {isCatOpen && (
+        <div className="overflow-y-scroll h-24 absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
           <div className="py-1">
-            <a
-              href="#"
+            {
+            catData.map((item,index)=>{
+              return(
+              <button
+              onClick={(e)=>handleCategory(e,item.category)}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
-              Option 1
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              Option 2
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              Option 3
-            </a>
+              {item.category}
+            </button>
+            )})
+            }
+          
           </div>
         </div>
       )}
+      <p className="text-red-600 text-sm mb-3">{err.category}</p>
     </div>
+    
     {/* ghgvgvgvg */}
     <div className="relative inline-block text-left">
-              <span className="block text-sm mb-1">Category</span>
+              <span className="block text-sm mb-1">Subcategory</span>
              <label className="relative"><input
                 type="text"
                 id="formInputControl4"
                 className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                 name="fee"
                 // onChange={addData}
-                onClick={toggleDropdown}
+                onClick={toggleSubcatDropdown}
+                value={subcategory}
               /> 
               
               <svg
               className={`w-5 h-5 ml-2 transition-transform duration-200 absolute top-0 right-1 transform ${
-                isOpen ? 'rotate-180' : ''
+                isSubcatOpen ? 'rotate-180' : ''
               }`}
               fill="currentColor"
               viewBox="0 0 20 20"
@@ -352,16 +423,25 @@ const [isOpen, setIsOpen] = useState(false);
              
               </label>
      
-      {isOpen && (
+      {isSubcatOpen && (
         <div className="absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
           <div className="py-1">
-            <a
-              href="#"
+          {
+            catData.map((item,index)=>{
+              return(
+              <button
+              onClick={(e)=>handleSubcategory(e,item.subcategory)}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
-              Option 1
-            </a>
-            <a
+              {item.subcategory.map(obj=><li style={{listStyle:"none"}}>{obj}</li>)}
+              
+
+
+             
+            </button>
+            )})
+            }
+            {/* <a
               href="#"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
@@ -372,7 +452,7 @@ const [isOpen, setIsOpen] = useState(false);
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               Option 3
-            </a>
+            </a> */}
           </div>
         </div>
       )}
@@ -397,14 +477,16 @@ const [isOpen, setIsOpen] = useState(false);
             value={description} 
             onChange={handleDescriptionChange}
             ></textarea>
+            <p className="text-red-600 text-sm mb-2">{err.description}</p>
           </div>
           
 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">Upload Thumbnail</label>
 <input accept="image/jpeg,image/png,image/gif" name="thumbnail"
 //  onChange={handleUpload}
-onChange={handleThumbnailChange}
- className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-700 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file"/>
+ className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-700 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file"
+ onChange={handleThumbnailChange}/>
 <p className="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
+<p className="text-red-600 text-sm mb-3">{err.thumbnail}</p>
 
 
           <div className="flex items-center justify-center w-full">
@@ -412,7 +494,7 @@ onChange={handleThumbnailChange}
               htmlFor="dropzone-file"
               className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
             >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <div className="flex flex-col items-center justify-center pt-5 pb-6 ">
                 <svg
                   aria-hidden="true"
                   className="w-10 h-10 mb-3 text-gray-400"
@@ -435,16 +517,23 @@ onChange={handleThumbnailChange}
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                 MP4, MOV, AVI, etc.
                 </p>
+                <p className="text-red-600 text-sm mb-3">{err.thumbnail}</p>
               </div>
               <input id="dropzone-file" type="file" className="hidden" accept="video/mp4,video/x-m4v,video/*"  name="course"onChange={handleVideoChange}/>
               {/* <input id="dropzone-file" type="file" className="hidden" accept="video/mp4,video/x-m4v,video/*"  name="course" onChange={handleUpload}/> */}
             </label>
-          </div>
-
+              </div>
+              <div className="mt-2">
+                <p className="text-red-600 text-sm mb-3">{err.video}</p>
+              </div>
+              
           <div className="flex justify-center mt-2">
-            <button onClick={(e) => uploadFile(e,selectedVideo)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
+            <button onClick={(e) => handleCourseCreation(e)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
               Add
             </button>
+            {/* <button onClick={(e) => uploadFile(e,selectedVideo)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
+              Add
+            </button> */}
           </div>
         </form>
       </div>
