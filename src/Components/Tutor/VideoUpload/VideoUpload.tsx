@@ -101,6 +101,7 @@ try{
           Body: file,
           Bucket: s3Config.bucketName,
           Key: `videos/${file.name}`
+          // Key: `${file.name}`
       };
 
       myBucket.putObject(params)
@@ -123,6 +124,63 @@ try{
       
   }
 
+
+  // New vdo uplod function
+
+  const uploadFiles = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!selectedVideo || !selectedThumbnail) {
+      console.log('Please select both video and thumbnail files.');
+      return;
+    }
+
+    const s3 = new AWS.S3({
+      accessKeyId: s3Config.accessKeyId,
+      secretAccessKey: s3Config.secretAccessKey,
+      region: s3Config.region,
+    });
+
+    const videoParams = {
+      Body: selectedVideo,
+      Bucket: s3Config.bucketName,
+      Key: `videos/${selectedVideo.name}`,
+    };
+
+    const thumbnailParams = {
+      Body: selectedThumbnail,
+      Bucket: s3Config.bucketName,
+      Key: `thumbnails/${selectedThumbnail.name}`,
+    };
+
+    Promise.all([
+      s3.upload(videoParams).promise(),
+      s3.upload(thumbnailParams).promise(),
+    ])
+      .then(async([videoResponse, thumbnailResponse]) => {
+        console.log('Video upload response:', videoResponse);
+        console.log('Thumbnail upload response:', thumbnailResponse);
+        // `https://${s3Config.bucketName}.s3.${s3Config.region}.amazonaws.com/videos/vdo-126.mp4`
+        const videoLocations = `${process.env.REACT_APP_S3BUCKET_URL}/${videoResponse.Key}`;
+        const thumbnailLocations = `${process.env.REACT_APP_S3BUCKET_URL}/${thumbnailResponse.Key}`;
+        
+        const videoLocation = `${videoResponse.Key}`;
+        const thumbnailLocation = `${thumbnailResponse.Key}`
+        console.log('Video location:', videoLocation);
+        console.log('Thumbnail location:', thumbnailLocation);
+
+        if(videoLocation && thumbnailLocation){
+          const result = await api.post('/tutor/create-course',{videoLocation,thumbnailLocation,title,fee,category,subcategory,description,tutId},{ withCredentials: true })
+          console.log('result=',result);
+        }
+      })
+      .catch((error) => {
+        console.log('Error uploading files:', error);
+      });
+  };
+
+
+
+  // End
 
 
 
@@ -528,12 +586,15 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
               </div>
               
           <div className="flex justify-center mt-2">
-            <button onClick={(e) => handleCourseCreation(e)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
+            {/* <button onClick={(e) => handleCourseCreation(e)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
               Add
-            </button>
+            </button> */}
             {/* <button onClick={(e) => uploadFile(e,selectedVideo)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
               Add
             </button> */}
+            <button onClick={(e) => uploadFiles(e)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
+              Add
+            </button>
           </div>
         </form>
       </div>

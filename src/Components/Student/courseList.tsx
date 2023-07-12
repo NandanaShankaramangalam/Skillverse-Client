@@ -52,7 +52,9 @@ function CourseList() {
         try{
             const response = await api.get(`/show-courses/${selectedCategory}`)
             console.log('cos res=',response.data);
-            setCourses(response.data.filteredCourses);
+            setCourses(response.data.courses);
+            console.log('new coses=',courses);
+            
         }catch(err){
             console.error(err);
            }
@@ -69,12 +71,11 @@ function CourseList() {
                 <h1 className='font-medium text-xl'> Courses</h1>
                 {courses.map(course => {
         return(
-            <div key={course._id} className="course-card">
-          <video controls>
-            <source type="video/mp4" src={course.videoUrl}/>
+          <div key={course._id} className="course-card">
+          <video controls onContextMenu={(e) => e.preventDefault()}>
+            <source type="video/mp4" src={`${process.env.REACT_APP_S3BUCKET_URL}/${course.video}`}/>
           </video>
-          <img src={course.thumbnailUrl} alt={course.title} />
-          <img src="https://skillverse-bucket.s3.ap-south-1.amazonaws.com/images/draw.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWU6TXFWYX2XGDPWG%2F20230711%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20230711T061523Z&X-Amz-Expires=900&X-Amz-Signature=7eccb0a542ff2eb0b1b094e11125aa80915507082251a0423da9ff7902b58730&X-Amz-SignedHeaders=host" alt={course.title} />
+          <img src={`${process.env.REACT_APP_S3BUCKET_URL}/${course.thumbnail}`} alt={course.title} className='h-32 w-60' />
           <h2>{course.title}</h2>
         </div>
         )

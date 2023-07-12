@@ -107,7 +107,7 @@ function Login(props: LoginProps) {
           console.log('stud data=',data);
           setErr((prevState) => ({ ...prevState, block: data.block }));
           if(data.student?.username && data.student?.email){
-            dispatch(studentLogged({studUsername:data.student.username,studEmail:data.student.email}))
+            dispatch(studentLogged({studUsername:data.student.username,studEmail:data.student.email,studId:data.student._id}))
           }
          
   if(data.student){ 

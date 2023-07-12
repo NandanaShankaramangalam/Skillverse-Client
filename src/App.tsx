@@ -13,17 +13,17 @@ import TutorManagement from "./Pages/Admin/TutorManagement";
 import CategoryManagement from "./Pages/Admin/CategoryManagement";
 import TutorDashboard from "./Pages/Tutor/Dashboard";
 import VideoUpload from "./Components/Tutor/VideoUpload/VideoUpload";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import ViewProfile from "./Components/Tutor/Profile/ViewProfile";
 import CourseList from "./Components/Student/courseList";
 import StudentProfile from "./Pages/Student/Profile";
-import Profile from "./Components/Student/Profile";
+import Dashboard from "./Components/Student/Dashboard/Dashboard";
+// import Profile from "./Components/Student/Profile/Profile";
 
 function App() {
-  
   const { tutId } = useSelector((state: any) => state.tutor);
-  const{selectedCategory} = useSelector((state:any)=>state.student)
-  const category = localStorage.getItem('category');
+  const { selectedCategory } = useSelector((state: any) => state.student);
+  const category = localStorage.getItem("category");
   return (
     <div>
       <Router>
@@ -31,21 +31,34 @@ function App() {
           <Route path="/" Component={Home} />
           <Route path="/login" Component={LoginForm} />
           <Route path="/registration" Component={RegistrationForm} />
-          <Route path={`/course-list/${selectedCategory}`} Component={CourseList} />
-          {/* <Route path="/profile" Component={Profile} /> */}
+          <Route
+            path={`/course-list/${selectedCategory}`}
+            Component={CourseList}
+          />
+          <Route path="/profile" Component={StudentProfile} />
+          <Route path="/dashboard" Component={Dashboard}/>
 
-          <Route path='/admin/login' Component={AdminLoginForm}/>
-          <Route path="/admin/dashboard" Component={AdminDashboard}/>
-          <Route path="/admin/student-management" Component={StudentManagement}/>
-          <Route path="/admin/tutor-management" Component={TutorManagement}/>
-          <Route path="/admin/category-management" Component={CategoryManagement}/>
 
-          <Route path='/tutor/login' Component={TutorLoginForm}/>
-          <Route path='/tutor/home' Component={TutorHome}/>
-          <Route path='/tutor/dashboard' Component={TutorDashboard}/>
-          <Route path={`/tutor/profile`} Component={ViewProfile}/>
+
+          <Route path="/admin/login" Component={AdminLoginForm} />
+          <Route path="/admin/dashboard" Component={AdminDashboard} />
+          <Route
+            path="/admin/student-management"
+            Component={StudentManagement}
+          />
+          <Route path="/admin/tutor-management" Component={TutorManagement} />
+          <Route
+            path="/admin/category-management"
+            Component={CategoryManagement}
+          />
+
+
+
+          <Route path="/tutor/login" Component={TutorLoginForm} />
+          <Route path="/tutor/home" Component={TutorHome} />
+          <Route path="/tutor/dashboard" Component={TutorDashboard} />
+          <Route path={`/tutor/profile`} Component={ViewProfile} />
           {/* <Route path='/tutor/video-upload' Component={VideoUpload}/> */}
-
         </Routes>
       </Router>
     </div>

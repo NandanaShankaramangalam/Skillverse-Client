@@ -1,12 +1,13 @@
-import React from 'react'
-import Profile from '../../Components/Student/Profile'
+import React from "react";
+import Profile from "../../Components/Student/StudentProfile/Profile";
+
 
 function StudentProfile() {
   return (
     <div>
-        <Profile/>
+      <Profile/>
     </div>
-  )
+  );
 }
 
-export default StudentProfile
+export default StudentProfile;
