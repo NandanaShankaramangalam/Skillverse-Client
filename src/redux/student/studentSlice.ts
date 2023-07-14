@@ -4,6 +4,7 @@ const INITIAL_STATE = {
     studUsername : '',
     studEmail: '',
     selectedCategory : '',
+    selectedCourseId : '',
     studId : '',
 }
 
@@ -15,6 +16,7 @@ const studentSlice = createSlice({
             state.studUsername = action.payload.studUsername
             state.studEmail = action.payload.studEmail
             state.selectedCategory = action.payload.selectedCategory
+            state.selectedCourseId = action.payload.selectedCourseId
             state.studId = action.payload.studId
         }
     }

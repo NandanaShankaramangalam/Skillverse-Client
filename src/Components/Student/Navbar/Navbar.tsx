@@ -15,7 +15,8 @@ interface CategoryData{
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { studUsername, studEmail } = useSelector((state: any) => state.student);
+  // const { studUsername, studEmail } = useSelector((state: any) => state.student);
+  const studentSlice = useSelector((state: any) => state.student);
   const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
   const [isBrowseOpen, setIsBrowseOpen] = useState<boolean>(false);
   const [catData,setCatData] = useState<CategoryData[]>([]);
@@ -34,7 +35,7 @@ function Navbar() {
   useEffect(() => {
     const student = localStorage.getItem("student");
     console.log("student=", student);
-    console.log('stud uname=',studUsername);
+    console.log('stud uname=',studentSlice.studUsername);
     fetchCatData();
 
     if (student) {
@@ -122,25 +123,25 @@ function Navbar() {
       studUsername && <button className='ml-2' onClick={()=>navigate(`/profile`)}><span>{studUsername}</span></button>
       } */}
 
-            {studUsername ? (
+            {studentSlice.studUsername ? (
               <button onClick={handleLogout}>
                 <span>Logout</span>
               </button>
             ) : (
               <button onClick={() => navigate("/login")}>
-                <span>Login {studUsername}</span>
+                <span>Login {studentSlice.studUsername}</span>
               </button>
             )}
              {
-      studUsername && <button className='ml-2' onClick={()=>navigate('/dashboard')}><span>{studUsername}</span></button>
+      studentSlice.studUsername && <button className='ml-2' onClick={()=>navigate('/dashboard')}><span>{studentSlice.studUsername}</span></button>
       } 
 
-{/* <button 
+      {/* <button 
       onClick={handleLogout}
       >
-        <span>Logout {studUsername}</span>
-      </button>
- */}
+        <span>Logout {studentSlice.studUsername}</span>
+      </button> */}
+
 
             {/* <button onClick={stud?()=>handleLogout:()=>navigate('/login')}>
               <span>{stud?'Logout':'Login'}</span>
@@ -158,9 +159,9 @@ function Navbar() {
               <button
               // onClick={(e)=>handleCategory(e,item.category)}
               onClick={()=>{
-                localStorage.setItem('category',item.category);
+              localStorage.setItem('category',item.category);
               navigate(`/course-list/${item.category}`); 
-              dispatch(studentLogged({selectedCategory:item.category}))
+              dispatch(studentLogged({...studentSlice,selectedCategory:item.category}))
             }}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >

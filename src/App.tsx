@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
@@ -15,14 +15,17 @@ import TutorDashboard from "./Pages/Tutor/Dashboard";
 import VideoUpload from "./Components/Tutor/VideoUpload/VideoUpload";
 import { useDispatch, useSelector } from "react-redux";
 import ViewProfile from "./Components/Tutor/Profile/ViewProfile";
-import CourseList from "./Components/Student/courseList";
+// import CourseList from "./Components/Student/CourseList/courseList";
 import StudentProfile from "./Pages/Student/Profile";
 import Dashboard from "./Components/Student/Dashboard/Dashboard";
+import CourseList from "./Pages/Student/CourseList";
+import CourseDetail from "./Pages/Student/CourseDetails";
 // import Profile from "./Components/Student/Profile/Profile";
 
 function App() {
   const { tutId } = useSelector((state: any) => state.tutor);
   const { selectedCategory } = useSelector((state: any) => state.student);
+  const { selectedCourseId } = useSelector((state: any) => state.student);
   const category = localStorage.getItem("category");
   return (
     <div>
@@ -35,10 +38,9 @@ function App() {
             path={`/course-list/${selectedCategory}`}
             Component={CourseList}
           />
+          <Route path={`/course/${selectedCourseId}`} Component={CourseDetail}/>
           <Route path="/profile" Component={StudentProfile} />
-          <Route path="/dashboard" Component={Dashboard}/>
-
-
+          <Route path="/dashboard" Component={Dashboard} />
 
           <Route path="/admin/login" Component={AdminLoginForm} />
           <Route path="/admin/dashboard" Component={AdminDashboard} />
@@ -51,8 +53,6 @@ function App() {
             path="/admin/category-management"
             Component={CategoryManagement}
           />
-
-
 
           <Route path="/tutor/login" Component={TutorLoginForm} />
           <Route path="/tutor/home" Component={TutorHome} />
