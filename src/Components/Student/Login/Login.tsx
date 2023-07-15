@@ -190,11 +190,6 @@ function Login(props: LoginProps) {
           >
             <button
               className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out"
-              // onClick={
-              //   props.userType == "student"
-              //     ? handleStudentLogin
-              //     : handleTutorLogin
-              // }
               onClick={handleStudentLogin}
             >
               Sign in

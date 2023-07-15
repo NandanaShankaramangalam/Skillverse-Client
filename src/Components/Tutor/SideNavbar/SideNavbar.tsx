@@ -2,9 +2,11 @@ import { faBook, faCalendar, faCoins, faMessage, faUser, faUsers } from '@fortaw
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 function SideNavbar() {
-  const{tutUsername,tutEmail,tutId} = useSelector((state:any)=>state.tutor)
+  const{tutUsername,tutEmail,tutId} = useSelector((state:any)=>state.tutor);
+  const navigate = useNavigate();
   return (
     <div>
         <div className='text-center mt-5'>
@@ -28,7 +30,7 @@ function SideNavbar() {
             {/* <div className=' bg-amber-300 '> */}
             <ul className="space-y-4">
             <li><FontAwesomeIcon icon={faUser} className='text-lg text-custom-blue'/><span className='ml-4 text-base'>Personal Info</span></li>
-            <li><FontAwesomeIcon icon={faBook} className='text-lg text-cyan-600'/><span className='ml-4 text-base'>Courses</span></li>
+            <li onClick={()=>navigate('/tutor/courses')}><FontAwesomeIcon icon={faBook} className='text-lg text-cyan-600'/><span className='ml-4 text-base'>Courses</span></li>
             <li><FontAwesomeIcon icon={faUsers} className='text-lg text-yellow-400'/><span className='ml-3 text-base'>Students</span></li>
             <li><FontAwesomeIcon icon={faCalendar} className='text-lg text-green-600'/><span className='ml-4 text-base'>Slots</span></li>
             <li><FontAwesomeIcon icon={faMessage} className='text-lg text-violet-950'/><span className='ml-4 text-base'>Message</span></li>

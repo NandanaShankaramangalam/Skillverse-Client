@@ -214,7 +214,6 @@ try{
         setDescription(e.target.value);
       };
 
-     
 
       const handleVideoUpload = async(e: React.FormEvent)=>{
         e.preventDefault()
@@ -340,7 +339,8 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
     if(err.title === '' && err.fee === '' && err.description === '' && err.category === '' && err.subcate === '' && err.thumbnail === '' && err.video === ''){
      console.log('nsn');
      
-      handleVideoUpload(e);
+      // handleVideoUpload(e);
+      uploadFiles(e)
     console.log('nummm');
     
     }
@@ -575,9 +575,9 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                 MP4, MOV, AVI, etc.
                 </p>
-                <p className="text-red-600 text-sm mb-3">{err.thumbnail}</p>
+                {/* <p className="text-red-600 text-sm mb-3">{err.thumbnail}</p> */}
               </div>
-              <input id="dropzone-file" type="file" className="hidden" accept="video/mp4,video/x-m4v,video/*"  name="course"onChange={handleVideoChange}/>
+              <input id="dropzone-file" type="file" className="hidden" accept="video/mp4,video/x-m4v,video/*"  name="course" onChange={handleVideoChange}/>
               {/* <input id="dropzone-file" type="file" className="hidden" accept="video/mp4,video/x-m4v,video/*"  name="course" onChange={handleUpload}/> */}
             </label>
               </div>
@@ -592,7 +592,7 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
             {/* <button onClick={(e) => uploadFile(e,selectedVideo)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
               Add
             </button> */}
-            <button onClick={(e) => uploadFiles(e)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
+            <button onClick={(e) => handleCourseCreation(e)} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
               Add
             </button>
           </div>

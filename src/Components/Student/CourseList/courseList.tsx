@@ -105,15 +105,12 @@ function CourseList() {
           </div>
 
           <div className="mt-5 grid grid-cols-3 gap-1 pe-16 mb-5">
-            {/* <div className='bg-green-400 w-72 h-72 rounded-md mb-5'> */}
             {courses.map((course) => {
               return (
                 <div
                   key={course._id}
                   className="bg-white w-72 h-72 rounded-md mb-5 shadow-lg"
                   onClick={()=>{
-                    // dispatch(studentLogged({...studentSlice,selectedCourseId:course._id}))
-                    // navigate(`/course/${studentSlice.selectedCourseId}`);
                     dispatch(studentLogged({ ...studentSlice, selectedCourseId: course._id }));
                     navigate(`/course/${course._id}`);
                   }}
@@ -128,7 +125,6 @@ function CourseList() {
                   </div>
                   <div className="pt-2 ps-1">
                     <h1 className="text-gray-700">{course.title}</h1>
-                    <h1>{course._id}</h1>
                   </div>
                   <div className="pt-10 ps-1">
                     <button className="bg-yellow-500 text-black py-2 px-6 text-sm rounded-md hover:bg-yellow-400 transition duration-150 ease-out">
@@ -141,6 +137,7 @@ function CourseList() {
                 </div>
               );
             })}
+            </div>
             {/* <div className='h-44 bg-slate-600 rounded-t-md '>
       <img src="\images\knitting.jpg" alt="" className=' rounded-md object-fill'/>
     </div> */}
@@ -166,7 +163,7 @@ function CourseList() {
             {/* <div className='bg-green-400 w-72 h-72 rounded-md'>
      <h1>cards</h1>
   </div> */}
-          </div>
+          {/* </div>+ */}
 
           {/* <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
     <a href="#">

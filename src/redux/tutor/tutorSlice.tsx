@@ -4,6 +4,7 @@ const INITIAL_STATE = {
     tutUsername : '',
     tutEmail: '',
     tutId: '',
+    courseId: '',
 
 }
 
@@ -15,6 +16,7 @@ const tutorSlice = createSlice({
             state.tutUsername = action.payload.tutUsername
             state.tutEmail = action.payload.tutEmail
             state.tutId = action.payload.tutId
+            state.courseId = action.payload.courseId
         }
     }
 })
