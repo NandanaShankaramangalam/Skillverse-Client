@@ -22,6 +22,10 @@ import CourseList from "./Pages/Student/CourseList";
 import CourseDetail from "./Pages/Student/CourseDetails";
 import Courses from "./Pages/Tutor/Courses";
 import TutorCourseDetails from "./Pages/Tutor/CourseDetails";
+import PayPal from "./Components/Student/Payment/PayPal";
+// import CourseAttend from "./Components/Student/CourseAttend/CourseAttend";
+import CoursesAttend from "./Pages/Student/CourseAttend";
+import Chat from "./Components/Chat/Chat";
 // import Profile from "./Components/Student/Profile/Profile";
 
 function App() {
@@ -44,7 +48,9 @@ function App() {
           <Route path={`/course/${selectedCourseId}`} Component={CourseDetail}/>
           <Route path="/profile" Component={StudentProfile} />
           <Route path="/dashboard" Component={Dashboard} />
-
+          <Route path="/paypal" Component={PayPal} />
+          <Route path={`/course-attend/${courseId}`} Component={CoursesAttend} />
+          
 
           <Route path="/admin/login" Component={AdminLoginForm} />
           <Route path="/admin/dashboard" Component={AdminDashboard} />
@@ -66,6 +72,8 @@ function App() {
           <Route path="/tutor/courses" Component={Courses}/>
           <Route path={`/tutor/course/${courseId}`} Component={TutorCourseDetails}/>
           {/* <Route path='/tutor/video-upload' Component={VideoUpload}/> */}
+
+          <Route path="/chat" Component={Chat}/>
         </Routes>
       </Router>
     </div>

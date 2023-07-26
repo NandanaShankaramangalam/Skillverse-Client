@@ -2,12 +2,18 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { validate } from './CourseValidate';
+import { myBucket, s3Config } from '../../../s3Config';
+import AWS from 'aws-sdk'
+import { api } from '../../../services/axios';
+import { useSelector } from 'react-redux';
 
 interface CourseProps {
     setIsOpen : (value : boolean) => void;
 }
 function CourseCreation(props : CourseProps) {
     const [progress , setProgress] = useState(0);
+    const tutorSlice = useSelector((state:any)=>state.tutor);
+    const courseId = tutorSlice.courseId
     const [selectedVideo, setSelectedVideo] = useState<File>(new File([], '')); // Initialize with an empty File object
     const [selectedThumbnail, setSelectedThumbnail] = useState<File>(new File([], ''))
     const [title, setTitle] = useState('');
@@ -38,13 +44,68 @@ function CourseCreation(props : CourseProps) {
         const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
           setDescription(e.target.value);
         };
+
+        const uploadFiles = (e: React.MouseEvent<HTMLButtonElement>) => {
+          e.preventDefault();
+          if (!selectedVideo || !selectedThumbnail) {
+            console.log('Please select both video and thumbnail files.');
+            return;
+          }
+      
+          const s3 = new AWS.S3({
+            accessKeyId: s3Config.accessKeyId,
+            secretAccessKey: s3Config.secretAccessKey,
+            region: s3Config.region,
+          });
+      
+          const videoParams = {
+            Body: selectedVideo,
+            Bucket: s3Config.bucketName,
+            Key: `courses/${selectedVideo.name}`,
+          };
+      
+          const thumbnailParams = {
+            Body: selectedThumbnail,
+            Bucket: s3Config.bucketName,
+            Key: `courseThumbnails/${selectedThumbnail.name}`,
+          };
+      
+          Promise.all([
+            s3.upload(videoParams).promise(),
+            s3.upload(thumbnailParams).promise(),
+          ])
+            .then(async([videoResponse, thumbnailResponse]) => {
+              console.log('Video upload response:', videoResponse);
+              console.log('Thumbnail upload response:', thumbnailResponse);
+              // `https://${s3Config.bucketName}.s3.${s3Config.region}.amazonaws.com/videos/vdo-126.mp4`
+              const videoLocations = `${process.env.REACT_APP_S3BUCKET_URL}/${videoResponse.Key}`;
+              const thumbnailLocations = `${process.env.REACT_APP_S3BUCKET_URL}/${thumbnailResponse.Key}`;
+              
+              const videoLocation = `${videoResponse.Key}`;
+              const thumbnailLocation = `${thumbnailResponse.Key}`
+              console.log('Video location:', videoLocation);
+              console.log('Thumbnail location:', thumbnailLocation);
+      
+              if(videoLocation && thumbnailLocation){
+                const result = await api.post('/tutor/upload-class',{videoLocation,thumbnailLocation,title,description,courseId},{ withCredentials: true })
+                console.log('result=',result);
+                console.log('res===',result.data);
+                
+              }
+            })
+            .catch((error) => {
+              console.log('Error uploading files:', error);
+            });
+        };
+      
+      
         const handleCourseCreation = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             e.preventDefault();
             validate(title,description,selectedThumbnail,selectedVideo,err,setErr)
             console.log('err=',err);
             if(err.title === '' && err.description === '' && err.thumbnail === '' && err.video === ''){
              console.log('nsn');
-            //   uploadFiles(e)
+              uploadFiles(e)
             console.log('nummm');
             
             }

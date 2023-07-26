@@ -24,6 +24,7 @@ function CourseList() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const tutorSlice = useSelector((state: any) => state.tutor);
+    const tutId = tutorSlice.tutId;
     const [courses, setCourses] = useState<Courses[]>([]);
     useEffect(()=>{
        fetchCourseData();
@@ -31,7 +32,7 @@ function CourseList() {
 
     const fetchCourseData = async () =>{
         try{
-          const response = await api.get('/tutor/course-list');
+          const response = await api.get(`/tutor/course-list/${tutId}`);
           console.log('res=',response.data.courseData);
           setCourses(response.data.courseData);
         }catch (err) {
@@ -47,7 +48,7 @@ function CourseList() {
      </div>
      <div className="md:col-span-5 col-span-7"> 
       
-     <div className="mt-5 grid grid-cols-3 gap-1 pe-16 mb-5">
+     <div className="mt-5 grid grid-cols-3 gap-1 pe-16 mb-5 cursor-pointer">
             {courses.map((course) => {
               return (
                 <div

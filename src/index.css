@@ -19,3 +19,7 @@ code {
 *{
   font-family: sans-serif;
 }
+
+.scroll-bar::-webkit-scrollbar {
+  display: none;
+}

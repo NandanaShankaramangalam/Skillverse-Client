@@ -28,6 +28,10 @@ interface CategoryData{
   _id: string;
   status:boolean;
 }
+
+// interface Subcategory{
+//   category:string;
+// }
 // const S3_BUCKET ='skillverse-bucket';
 // const REGION ='ap-south-1';
 
@@ -62,6 +66,7 @@ function VideoUpload(props: VideoUpload) {
     const [description, setDescription] = useState('');
     const [category,setCategory] = useState('');
     const [subcategory,setSubcategory] = useState<string[]>([]);
+    const [subCates,setSubCates] = useState({subcategory:[]});
     const [catData,setCatData] = useState<CategoryData[]>([]);
     const [err,setErr] = useState({title:'',fee:'',category:'',subcate:'',description:'',thumbnail:'',video:''})
     const { tutId } = useSelector((state: any) => state.tutor);
@@ -322,9 +327,14 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
   const toggleSubcatDropdown = () => {
     setIsSubcatOpen(!isSubcatOpen);
   };
-  const handleCategory = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>,cat:string) => {
+  const handleCategory = async(e:React.MouseEvent<HTMLButtonElement, MouseEvent>,cat:string) => {
     e.preventDefault();
     setCategory(cat);
+    const result = await api.get(`/tutor/get-subcategory/${cat}`);
+    console.log('subyyy=',result.data);
+    console.log('okk=',subCates);
+    
+    setSubCates(result.data.subCategory);
     setIsCatOpen(false);
   }
   const handleSubcategory = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>,cat:[string]) => {
@@ -485,6 +495,21 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
         <div className="absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
           <div className="py-1">
           {
+            subCates.subcategory.map((item,index)=>{
+              return(
+              <button
+              onClick={(e)=>handleSubcategory(e,item)}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <li style={{listStyle:"none"}}>{item[0]}</li>
+            </button>
+            )})
+            }
+          </div>
+
+
+          {/* <div className="py-1">
+          {
             catData.map((item,index)=>{
               return(
               <button
@@ -492,26 +517,10 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               {item.subcategory.map(obj=><li style={{listStyle:"none"}}>{obj}</li>)}
-              
-
-
-             
             </button>
             )})
             }
-            {/* <a
-              href="#"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              Option 2
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              Option 3
-            </a> */}
-          </div>
+          </div> */}
         </div>
       )}
     </div>

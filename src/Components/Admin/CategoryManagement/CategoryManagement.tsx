@@ -8,11 +8,11 @@ import AddSubcategory from './AddSubcategory';
 import EditCategory from './EditCategory';
 interface Category{
     category : string;
-    subcategory : string;
+    // subcategory : string;
 }
 interface CategoryData{
     category : string;
-    subcategory : string;
+    subcategory : string[];
     _id: string;
     status:boolean;
 }
@@ -24,8 +24,10 @@ function CategoryManagement() {
         const [isOpen, setIsOpen] = useState<boolean>(false);
         const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
         const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
-        const [categories,setCategory] = useState<Category>({category:'',subcategory:''});
-        const [errors,setErrors] = useState({cate:'',subcate:''})
+        // const [categories,setCategory] = useState<Category>({category:'',subcategory:''});
+        const [categories,setCategory] = useState<Category>({category:''});
+        // const [errors,setErrors] = useState({cate:'',subcate:''})
+        const [errors,setErrors] = useState({cate:''})
 
         const openModal = () => {
           setIsOpen(true);
@@ -79,26 +81,33 @@ function CategoryManagement() {
 
         const handleSubmit = async(e: React.FormEvent) => {
           e.preventDefault();
-          console.log('aaa');
+          console.log('yyy');
           
           try{  
-            const {category,subcategory} = categories;
+            // const {category,subcategory} = categories;
+            const {category} = categories;
             // const category = categories.cate
             // const subcategory = categories.subcate
             console.log('cat=',categories);
+            console.log('errcat=',errors.cate);
             
-            if(category!=='' && subcategory!==''){
+            // if(category!=='' && subcategory!==''){
+              if(category===''){
                 console.log('cat=',category);
-            const {cate,subcate} = errors;
-            if(cate==='' && subcate===''){
-                console.log('mmmmm'); 
+                setErrors({...errors,cate:'Category cannot be empty!'})
+              }
+                // const {cate} = errors;
+               // if(cate==='' && subcate===''){
+              else{
+                setErrors({...errors,cate:''})
+                console.log('errcatttt=',errors.cate); 
                 const {data} = await api.post('/admin/add-category',{...categories},{withCredentials:true})
                 // await api.post('/admin/add-category',{...category},{withCredentials:true})
                 console.log('add cat',data);
                 closeModal();
                 fetchData();
             } 
-            }
+            
            
           }catch(err){
             console.log(err);    
@@ -183,7 +192,8 @@ function CategoryManagement() {
                    {item.category}
                 </td>
                 <td className="px-6 py-4">
-                   {item.subcategory.split(',').map(obj=><li>{obj}</li>)}
+                   {/* {item.subcategory.split(',').map(obj=><li>{obj}</li>)} */}
+                   {item.subcategory.map(obj=><li>{obj}</li>)}
                 </td>
                 <td className="px-6 py-4">
                   <div className='pt-1'>
@@ -236,9 +246,9 @@ function CategoryManagement() {
               onChange={addCate}
             />
           </div>
-          <p className="text-red-600 text-sm">{errors.cate}</p>
+          <p className="text-red-600 text-sm mb-2">{errors.cate}</p>
 
-              <div className="mb-3 mt-5">
+              {/* <div className="mb-3 mt-5">
             <label htmlFor="formInputControl2" className="text-sm ">
               Subcategory
             </label>
@@ -249,8 +259,8 @@ function CategoryManagement() {
               name="subcategory"
               onChange={addCate}
             />
-          </div>
-          <p className="text-red-600 text-sm">{errors.subcate}</p>
+          </div> */}
+          {/* <p className="text-red-600 text-sm">{errors.subcate}</p> */}
 
               <div className='flex justify-center'>
                 <button className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">

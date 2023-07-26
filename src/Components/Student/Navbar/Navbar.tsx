@@ -150,7 +150,7 @@ function Navbar() {
         </ul>
       </nav>
       {isBrowseOpen && (
-        <div className="hidden md:block fixed top-20 right-4 mt-2 bg-slate-300 text-gray-800  h-40 w-40 ps-2 rounded overflow-y-auto ml-auto">
+        <div className="z-10 scroll-bar absolute hidden md:block top-20 right-4 mt-2 bg-slate-300 text-gray-800  h-40 w-40 ps-2 rounded overflow-y-auto ml-auto">
           <ul className="mt-2">
           {
             catData.map((item,index)=>{
