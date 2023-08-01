@@ -34,6 +34,7 @@ function ViewProfile() {
         
         const profileData = await api.get(`/tutor/profile/${tutId}`)
         console.log('profdata=',profileData.data.profileData);
+        // if(profileData.data.profileData)
         const{profileLocation,bannerLocation,description,niche} = profileData.data.profileData
         // console.log('profffffffdata=',profileData.data);
         

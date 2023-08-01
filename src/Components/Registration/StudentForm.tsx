@@ -5,6 +5,8 @@ import { studentAuth } from "../../domain/models/student";
 import { api } from "../../services/axios";
 import { validate } from "./Validate";
 import { useNavigate } from "react-router-dom";
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
+import jwtDecode from 'jwt-decode';
 
 function StudentForm() {
   const navigate = useNavigate();
@@ -47,6 +49,30 @@ function StudentForm() {
        
     }
   }
+
+  const gSignup=async(res:CredentialResponse)=>{
+    const result : any = jwtDecode(res.credential as string)
+    console.log('ress=',result);
+    
+    const student = {
+            fname:result.name.split(' ')[0],
+            lname:result.name.split(' ')[1],
+            username:result.email.split('@')[0],
+            email:result.email,
+            password:'123Google@@',
+            isGoogle:true
+    }
+    try{
+      const {data} = await api.post('/register',{...student},{withCredentials:true})
+      console.log("data=",data);
+      
+    }catch(err){
+      console.log(err);
+      
+    }
+  }
+
+
   // const handleSignup =  async(e:React.FormEvent) =>{
   //   e.preventDefault();
   //   try{
@@ -189,7 +215,7 @@ function StudentForm() {
               </button>
             </p>
           </div>
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <button className="px-4 py-2 border flex gap-2 border-slate-200 rounded-md text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
               <img
                 className="w-4 h-5"
@@ -199,6 +225,17 @@ function StudentForm() {
               />
               <span className="text-sm">Sign up with Google</span>
             </button>
+          </div> */}
+          <div className="flex justify-center ">
+          <GoogleLogin
+    onSuccess={credentialResponse => {
+      gSignup(credentialResponse)
+      console.log(credentialResponse);
+  }}
+  onError={() => {
+    console.log('Login Failed');
+  }}
+/>
           </div>
       </form>
     </div>

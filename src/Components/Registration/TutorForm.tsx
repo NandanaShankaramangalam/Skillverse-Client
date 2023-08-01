@@ -3,6 +3,7 @@ import { tutorAuth } from '../../domain/models/tutor'
 import { tutorValidate } from './tutorValidate';
 import { api } from '../../services/axios';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 function TutorForm() {
   const navigate = useNavigate();
   const [tutor,setTutor] = useState<tutorAuth>({fname:'',lname:'',username:'',email:'',password:'',confirm_password:''});
@@ -161,7 +162,7 @@ function TutorForm() {
             </button>
           </p>
         </div>
-        <div className="flex justify-center">
+        {/* <div className="flex justify-center">
           <button className="px-4 py-2 border flex gap-2 border-slate-200 rounded-md text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
             <img
               className="w-4 h-5"
@@ -171,6 +172,16 @@ function TutorForm() {
             />
             <span className="text-sm">Sign up with Google</span>
           </button>
+        </div> */}
+        <div className="flex justify-center">
+        <GoogleLogin
+            onSuccess={credentialResponse => {
+              console.log(credentialResponse);
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
         </div>
     </form>
   </div>

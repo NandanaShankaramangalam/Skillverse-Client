@@ -4,6 +4,7 @@ import { api } from "../../../services/axios";
 import jwtDecode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { studentLogged } from "../../../redux/student/studentSlice";
+import {CredentialResponse, GoogleLogin} from '@react-oauth/google';
 
 interface LoginProps {
   userType: string;
@@ -122,10 +123,31 @@ function Login(props: LoginProps) {
   }
         
     }
-  
-
   };
 
+  const gLogin=async(res:any)=>{
+    const result:any=jwtDecode(res.credential as string)
+    const email=result.email
+    const password='123Google@@'
+    const student = {
+      email,
+      password
+    }
+    console.log('std=',student);
+    
+    const {data}=await api.post('/student-login',{email,password},{withCredentials:true})
+    console.log('dddd=',data);
+    
+    if(data.student?.username && data.student?.email){
+      dispatch(studentLogged({studUsername:data.student.username,studEmail:data.student.email,studId:data.student._id}))
+    }
+    if(data.student){ 
+      console.log('aaa');
+      
+        localStorage.setItem('student',JSON.stringify(data))
+        navigate('/');
+    }
+  }
   //Handle Tutor Login
   // const handleTutorLogin = async (e: React.FormEvent) => {
   //   e.preventDefault();
@@ -220,7 +242,7 @@ function Login(props: LoginProps) {
               </button>
             </p>
           </div>
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <button className="px-4 py-2 border flex gap-2 border-slate-200 rounded-md text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
               <img
                 className="w-4 h-5"
@@ -230,6 +252,9 @@ function Login(props: LoginProps) {
               />
               <span className="text-sm">Login with Google</span>
             </button>
+          </div> */}
+          <div className="flex justify-center">
+          <GoogleLogin size='medium'  onSuccess={credentialResponse => {gLogin(credentialResponse);}} onError={() => { console.log('Login Failed'); }}/>
           </div>
           {props.userType == "student" ? (
             <div className="text-center mt-3 mb-2">

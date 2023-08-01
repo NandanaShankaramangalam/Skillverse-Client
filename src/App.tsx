@@ -25,14 +25,21 @@ import TutorCourseDetails from "./Pages/Tutor/CourseDetails";
 import PayPal from "./Components/Student/Payment/PayPal";
 // import CourseAttend from "./Components/Student/CourseAttend/CourseAttend";
 import CoursesAttend from "./Pages/Student/CourseAttend";
-import Chat from "./Components/Chat/Chat";
+// import Chat from "./Components/Chat/Chat";
+import Chats from "./Pages/Chat";
+// import BookmarkedCourses from "./Components/Student/BookmarkedCourses/BookmarkedCourses";
+import Bookmarks from "./Pages/Student/Bookmarks";
 // import Profile from "./Components/Student/Profile/Profile";
 
 function App() {
   const { tutId } = useSelector((state: any) => state.tutor);
   const { selectedCategory } = useSelector((state: any) => state.student);
   const { selectedCourseId } = useSelector((state: any) => state.student);
-  const { courseId } = useSelector((state: any) => state.tutor);
+  // const { courseId } = useSelector((state: any) => state.tutor);
+  const tutorSlice = useSelector((state: any) => state.tutor);
+  const courseId = tutorSlice.courseId;
+  console.log('cid app=',courseId);
+  
   const category = localStorage.getItem("category");
   return (
     <div>
@@ -42,15 +49,20 @@ function App() {
           <Route path="/login" Component={LoginForm} />
           <Route path="/registration" Component={RegistrationForm} />
           <Route
-            path={`/course-list/${selectedCategory}`}
+            path={`/course-list/:selectedCategory`}
             Component={CourseList}
           />
+          {/* <Route
+            path={`/course-list/${selectedCategory}`}
+            Component={CourseList}
+          /> */}
+
           <Route path={`/course/${selectedCourseId}`} Component={CourseDetail}/>
           <Route path="/profile" Component={StudentProfile} />
           <Route path="/dashboard" Component={Dashboard} />
           <Route path="/paypal" Component={PayPal} />
-          <Route path={`/course-attend/${courseId}`} Component={CoursesAttend} />
-          
+          <Route path={`/course-attend/:courseId`} Component={CoursesAttend} />
+          <Route path="/bookmarked-courses" element={<Bookmarks></Bookmarks>}/>
 
           <Route path="/admin/login" Component={AdminLoginForm} />
           <Route path="/admin/dashboard" Component={AdminDashboard} />
@@ -73,7 +85,8 @@ function App() {
           <Route path={`/tutor/course/${courseId}`} Component={TutorCourseDetails}/>
           {/* <Route path='/tutor/video-upload' Component={VideoUpload}/> */}
 
-          <Route path="/chat" Component={Chat}/>
+          <Route path="/chat" element={<Chats role={'student'}></Chats>}/>
+          <Route path="/tutor/chat" element={<Chats role={'tutor'}></Chats>}/>
         </Routes>
       </Router>
     </div>

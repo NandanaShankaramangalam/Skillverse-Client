@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../../../services/axios';
 import { useSelector } from 'react-redux';
 
@@ -7,10 +7,11 @@ function CourseAttend() {
    
   const navigate = useNavigate();
   const studentSlice = useSelector((state:any)=>state.student);
-  const courseId = studentSlice.courseId;
+  // const courseId = studentSlice.courseId;
   const studId = studentSlice.studId;
   const location = useLocation();
   const video = location.state.video;
+  const {courseId} =useParams()
   const [videoUrl,setVideoUrl] = useState('');
   const [title,setTitle] = useState('');
   const [description,setDescription] = useState('');
@@ -30,7 +31,7 @@ function CourseAttend() {
      }
       }
         fetchCourseData();
-  },[])
+  },[courseId])
 
   return (
     <div>

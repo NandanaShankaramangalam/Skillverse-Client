@@ -2,13 +2,17 @@ import { faBook, faBookmark, faCalendar, faCoins, faMessage, faUser, faUsers } f
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 
 function SideNavbar() {
   const{studUsername,StudId} = useSelector((state:any)=>state.student);
   const [isPersonalInfo,setIsPersonalInfo] = useState<boolean>(false);
-
+  const navigate = useNavigate();
   const handlePersonalInfo = () =>{
     setIsPersonalInfo(true);
+  }
+  const handleBookmarkedCourses = () =>{
+
   }
   return (
     <div>
@@ -34,8 +38,8 @@ function SideNavbar() {
             <ul className="space-y-4">
             <li><button onClick={()=>handlePersonalInfo}><FontAwesomeIcon icon={faUser} className='text-lg text-custom-blue'/><span className='ml-4 text-base'>Personal Info</span></button></li>
             <li><FontAwesomeIcon icon={faBook} className='text-lg text-cyan-600'/><span className='ml-4 text-base'>Purchased Courses</span></li>
-            <li><FontAwesomeIcon icon={faBookmark} className='text-lg text-red-800'/><span className='ml-3 text-base'>Bookmarked Courses</span></li>
-            <li><FontAwesomeIcon icon={faCalendar} className='text-lg text-green-600'/><span className='ml-4 text-base'>Slots</span></li>
+            <li className='cursor-pointer'><button onClick={()=>navigate('/bookmarked-courses')}><FontAwesomeIcon icon={faBookmark} className='text-lg text-red-800'/><span className='ml-3 text-base'>Bookmarked Courses</span></button></li>
+            {/* <li><FontAwesomeIcon icon={faCalendar} className='text-lg text-green-600'/><span className='ml-4 text-base'>Slots</span></li> */}
             <li><FontAwesomeIcon icon={faMessage} className='text-lg text-violet-950'/><span className='ml-4 text-base'>Message</span></li>
             {/* <li><FontAwesomeIcon icon={faCoins} className='text-lg text-red-800'/><span className='ml-4 text-base'>Revenue</span></li> */}
             </ul> 
