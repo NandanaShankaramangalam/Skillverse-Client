@@ -59,8 +59,8 @@ function Navbar() {
     </button>
   </div>
   <ul className="hidden md:flex space-x-3 text-sm">
-    <li>
-      <button>
+    <li className='cursor-pointer'>
+      <button onClick={()=>navigate('/tutor/dashboard')}>
         <span>Dashboard</span>
       </button>
     </li>

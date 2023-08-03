@@ -101,12 +101,12 @@ function Navbar() {
         </div>
         <ul className="hidden md:flex space-x-3 text-sm">
           <li>
-            <button>
+            <button onClick={()=>navigate('/')}>
               <span>Home</span>
             </button>
           </li>
           <li>
-            <button>
+            <button onClick={()=>navigate('/tutors')}>
               <span>Tutors</span>
             </button>
           </li>

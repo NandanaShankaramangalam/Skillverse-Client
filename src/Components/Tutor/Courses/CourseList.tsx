@@ -10,7 +10,7 @@ interface Courses {
     title: string;
     fee: number;
     category: string;
-    subcategory: string[];
+    subcategory: string;
     description: string;
     thumbnail: string;
     video: string;

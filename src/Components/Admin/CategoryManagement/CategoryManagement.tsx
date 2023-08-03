@@ -208,9 +208,9 @@ function CategoryManagement() {
                 {
 
                        item.status?
-                       <button className='rounded-full border px-7 py-2 border-green-600 bg-green-600 text-white' onClick={(e)=>handleList(e,item._id)}>List </button>
+                       <button className='rounded-full border px-7 py-2 border-green-600 bg-green-600 text-white' onClick={(e)=>handleList(e,item._id)}>Active </button>
                        :
-                       <button className='rounded-full border px-6 py-2 border-red-600 bg-red-600 text-white' onClick={(e)=>handleUnlist(e,item._id)}>Unlist</button>
+                       <button className='rounded-full border px-6 py-2 border-red-600 bg-red-600 text-white' onClick={(e)=>handleUnlist(e,item._id)}>Inactive</button>
                     }
                 
                 </td>

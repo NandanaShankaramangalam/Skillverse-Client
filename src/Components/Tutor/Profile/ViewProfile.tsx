@@ -33,8 +33,11 @@ function ViewProfile() {
         console.log('tutid===',tutId);
         
         const profileData = await api.get(`/tutor/profile/${tutId}`)
+        if(profileData.data.profileData){
         console.log('profdata=',profileData.data.profileData);
-        // if(profileData.data.profileData)
+        // if(profileData.data.profileData){
+         
+        // }
         const{profileLocation,bannerLocation,description,niche} = profileData.data.profileData
         // console.log('profffffffdata=',profileData.data);
         
@@ -44,7 +47,7 @@ function ViewProfile() {
         setNiche(niche);
         console.log('bannerfile=',bannerLocation);
         console.log('profile=',profileLocation);
-
+         }
         // const params = {
         //   Bucket: s3Config.bucketName,
         //   Key: `${bannerLocation}`, // Provide the path to your uploaded image
@@ -83,9 +86,9 @@ function ViewProfile() {
            <div className='bg-custom-blue rounded-md w-20 mx-auto'>
              <span className='text-neon-green text-sm font-bold'>Teacher</span>
            </div>
-           <div className='mb-8 mt-5 w-60 mx-auto'>
+           {/* <div className='mb-8 mt-5 w-60 mx-auto'>
             <hr className='border border-black'/>
-           </div>
+           </div> */}
         </div>
        
   </div>

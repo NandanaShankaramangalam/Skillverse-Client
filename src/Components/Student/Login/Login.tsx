@@ -1,6 +1,6 @@
 import React, {useEffect, useState,} from "react";
-import { useNavigate } from "react-router-dom";
-import { api } from "../../../services/axios";
+import { NavLink, useNavigate } from "react-router-dom";
+import { api, apiAuth } from "../../../services/axios";
 import jwtDecode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { studentLogged } from "../../../redux/student/studentSlice";
@@ -38,7 +38,7 @@ function Login(props: LoginProps) {
 
   useEffect(()=>{
     const stud = localStorage.getItem('student');
-    console.log(stud);
+    console.log('stuuuddd=',stud);
     if(stud){
        const token = JSON.parse(stud)
        console.log('token=',token);
@@ -104,7 +104,7 @@ function Login(props: LoginProps) {
           setErr((prevState) => ({ ...prevState, password: 'Password cannot be empty' }));
       }
      else {
-          const {data} = await api.post('/student-login',{...student}, { withCredentials: true });
+          const {data} = await apiAuth.post('/student-login',{...student}, { withCredentials: true });
           console.log('stud data=',data);
           setErr((prevState) => ({ ...prevState, block: data.block }));
           if(data.student?.username && data.student?.email){
@@ -199,12 +199,12 @@ function Login(props: LoginProps) {
           </div>
           {err.password && <span className='text-sm text-red-600'>{err.password}</span>}
           <div className="flex justify-end mb-4">
-            <a
-              href="#"
+            <NavLink to={'/forgot-password'}
+              
               className="text-cyan-600 hover:text-cyan-700 text-sm ml-44"
             >
               Forgot password?
-            </a>
+            </NavLink>
           </div>
 
           <div

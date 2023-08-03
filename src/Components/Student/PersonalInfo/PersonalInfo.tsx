@@ -16,11 +16,14 @@ function PersonalInfo() {
   },[])
  const fetchData = async() =>{
     const result = await api.get(`/personal-info/${studId}`);
-    console.log('res info==',result.data);
-    setFname(result.data.info.fname) 
-    setLname(result.data.info.lname)
-    setUsername(result.data.info.username)
-    setEmail(result.data.info.email)
+    // console.log('res info==',result.data);
+    if(result.data){
+      setFname(result.data.info.fname) 
+      setLname(result.data.info.lname)
+      setUsername(result.data.info.username)
+      setEmail(result.data.info.email)
+    }
+    
     
   }
   const handleInfoUpdate = async(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{

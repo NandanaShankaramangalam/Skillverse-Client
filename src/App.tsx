@@ -29,6 +29,13 @@ import CoursesAttend from "./Pages/Student/CourseAttend";
 import Chats from "./Pages/Chat";
 // import BookmarkedCourses from "./Components/Student/BookmarkedCourses/BookmarkedCourses";
 import Bookmarks from "./Pages/Student/Bookmarks";
+import Purchased from "./Pages/Student/Purchased";
+import ForgotPassword from "./Pages/Student/ForgotPassword";
+import ResetPassword from "./Pages/Student/ResetPassword";
+import Profile from "./Components/Student/StudentProfile/Profile";
+import TutorList from "./Pages/Student/TutorList";
+import TutorProfile from "./Pages/Student/TutorProfile";
+import StudentList from "./Pages/Tutor/StudentList";
 // import Profile from "./Components/Student/Profile/Profile";
 
 function App() {
@@ -63,7 +70,7 @@ function App() {
           <Route path="/paypal" Component={PayPal} />
           <Route path={`/course-attend/:courseId`} Component={CoursesAttend} />
           <Route path="/bookmarked-courses" element={<Bookmarks></Bookmarks>}/>
-
+          <Route path="/purchased-courses" element={<Purchased></Purchased>}/>
           <Route path="/admin/login" Component={AdminLoginForm} />
           <Route path="/admin/dashboard" Component={AdminDashboard} />
           <Route
@@ -75,8 +82,14 @@ function App() {
             path="/admin/category-management"
             Component={CategoryManagement}
           />
-
-
+          <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>}/>
+          <Route path="/reset-password" element={<ResetPassword></ResetPassword>}/>
+          {/* <Route path="/personal-info" element={<StudentProfile></StudentProfile>}/> */}
+          <Route path="/personal-info" element={<Profile></Profile>}/>
+          <Route path="/tutors" element={<TutorList></TutorList>}/>
+          <Route path="/view-tutor-profile" element={<TutorProfile></TutorProfile>}/>
+          <Route path='/students' element={<StudentList></StudentList>}/>
+ 
           <Route path="/tutor/login" Component={TutorLoginForm} />
           <Route path="/tutor/home" Component={TutorHome} />
           <Route path="/tutor/dashboard" Component={TutorDashboard} />

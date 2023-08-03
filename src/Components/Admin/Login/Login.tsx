@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { api } from '../../../services/axios';
+import { api, apiAuth } from '../../../services/axios';
 import jwtDecode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
@@ -101,7 +101,7 @@ function Login() {
                 setErr((prevState) => ({ ...prevState, password: 'Password cannot be empty' }));
             }
            else {
-                const {data} = await api.post('/admin/admin-login',{...admin}, { withCredentials: true });
+                const {data} = await apiAuth.post('/admin/admin-login',{...admin}, { withCredentials: true });
                 console.log('Admin dataaaa=',admin.username);
                 if(data.admin?.username){
                   dispatch(adminLogged({admUsername:data.admin.username}))

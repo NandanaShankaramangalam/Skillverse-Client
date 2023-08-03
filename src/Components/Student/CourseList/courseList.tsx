@@ -18,7 +18,7 @@ interface Courses {
   title: string;
   fee: number;
   category: string;
-  subcategory: string[];
+  subcategory: string;
   description: string;
   thumbnail: string;
   video: string;
@@ -165,8 +165,11 @@ function CourseList() {
                   </div>
                   <div className="pt-2 ps-1">
                     <h1 className="text-gray-700">{course.title}</h1>
+                      <div className="">
+                        <p className="text-gray-400 line-clamp-2 text-sm">{course.description}</p>
+                      </div>
                   </div>
-                  <div className="pt-8 ps-1">
+                  <div className="pt-1 ps-1">
                    {course.students?.includes(studId)?
                     <span className="text-green-800">Purchased <FontAwesomeIcon icon={faCheck} /></span>
                     :
@@ -186,7 +189,8 @@ function CourseList() {
                     </div>
                      */}
                   </div>
-                  <div className="flex justify-end mr-3 pt-2">
+                  <div className="flex justify-between mr-3 pt-1">
+                    <span className="text-sm ml-2 text-gray-600">{course.subcategory}</span>
                       {course.bookmarks?.includes(studId)?
                       <span onClick={()=>handleRemoveCourseBookmark(course._id)}><BsBookmarkFill/></span>
                       :

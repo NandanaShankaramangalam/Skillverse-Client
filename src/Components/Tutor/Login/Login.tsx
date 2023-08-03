@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { api } from "../../../services/axios";
+import { api, apiAuth } from "../../../services/axios";
 import jwtDecode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import React, {useEffect, useState,} from "react";
@@ -72,7 +72,7 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
           setErr((prevState) => ({ ...prevState, password: 'Password cannot be empty' }));
       }
      else {
-          const {data} = await api.post('/tutor/tutor-login',{...tutor}, { withCredentials: true });
+          const {data} = await apiAuth.post('/tutor/tutor-login',{...tutor}, { withCredentials: true });
           console.log('tutor res=',data.block);
           setErr((prevState) => ({ ...prevState, block: data.block }));
           console.log('tutor data=',data.tutor);

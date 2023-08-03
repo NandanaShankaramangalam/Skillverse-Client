@@ -1,69 +1,43 @@
 import React, { useState,useEffect } from 'react'
-import Navbar from '../Navbar/Navbar'
-import SideNavbar from '../SideNavbar/SideNavbar'
-import { api } from '../../../services/axios'
-import { useSelector } from 'react-redux'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
-import {BsBookmark} from 'react-icons/bs';
-import {BsBookmarkFill} from 'react-icons/bs';
-interface Courses {
-  _id: string;
-  title: string;
-  fee: number;
-  category: string;
-  subcategory: string[];
-  description: string;
-  thumbnail: string;
-  video: string;
-  tutId: string;
-  status?: boolean;
-  students?: [string];
-  videoUrl?: string;
-  thumbnailUrl?: string;
-  bookmarks ?: [string],
-}
-function BookmarkedCourses() {
-  const studentSlice = useSelector((state:any)=>state.student);
-  const studId = studentSlice.studId;
-  const [courses,setCourses] = useState<Courses[]>([]);
-  const [isBookmark,setIsBookmark] = useState(true);
-  useEffect(()=>{
-     handleFetchSavedCourses();
-  },[isBookmark])
-        const handleFetchSavedCourses = async() =>{
-          try{
-           const result = await api.get(`/saved-courses/${studId}`)
-           console.log('ress=',result.data);
-           setCourses(result.data.bookmarkedCourses)
-          }catch(err){
-            console.log(err);
-            
-          }
-        }
+import SideNavbar from '../SideNavbar/SideNavbar';
+import Navbar from '../Navbar/Navbar';
+import { api } from '../../../services/axios';
+import { useSelector } from 'react-redux';
 
-        // const handleCourseBookmark = async (courseId:string) =>{
-        //   try{
-        //     const response = await api.post(`/bookmark/${courseId}/${studId}`);
-        //     console.log(response.data);
-        //     if(response){
-        //       setIsBookmark(true);
-        //     }
-        //   }catch (err) {
-        //     console.error(err);
-        //   }
-        // }
-        const handleRemoveCourseBookmark = async (courseId:string) =>{
-          try{
-            const response = await api.post(`/remove-bookmark/${courseId}/${studId}`);
-            console.log(response.data);
-            if(response){
-              setIsBookmark(false);
-            }
-          }catch (err) {
-            console.error(err);
-          }
+interface Courses {
+    _id: string;
+    title: string;
+    fee: number;
+    category: string;
+    subcategory: string[];
+    description: string;
+    thumbnail: string;
+    video: string;
+    tutId: string;
+    status?: boolean;
+    students?: [string];
+    videoUrl?: string;
+    thumbnailUrl?: string;
+    bookmarks ?: [string],
+  }
+function PurchasedCourses() {
+    const [courses,setCourses] = useState<Courses[]>([]);
+    const studentSlice = useSelector((state:any)=>state.student);
+    const studId = studentSlice.studId;
+    
+    useEffect(()=>{
+      handlePurchasedCourses();
+    },[])
+    const handlePurchasedCourses = async() =>{
+        try{
+         const result = await api.get(`/purchased-courses/${studId}`)
+         console.log('ress=',result.data);
+         setCourses(result.data.purchasedCourses)
+        }catch(err){
+          console.log(err);
+          
         }
+      }
   return (
     <div>
         <Navbar/>
@@ -119,11 +93,11 @@ function BookmarkedCourses() {
                            ${course.fee}
                         </span>
                       </div>
-                      <div className=''>
+                      {/* <div className=''>
                           {course.bookmarks?.includes(studId) &&
                               <span onClick={()=>handleRemoveCourseBookmark(course._id)}><BsBookmarkFill/></span>
                           }
-                      </div>
+                      </div> */}
                   </div>
                   
                   </div>
@@ -139,4 +113,4 @@ function BookmarkedCourses() {
   )
 }
 
-export default BookmarkedCourses
+export default PurchasedCourses

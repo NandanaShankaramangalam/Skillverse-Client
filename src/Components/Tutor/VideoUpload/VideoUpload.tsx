@@ -441,7 +441,7 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
               </label>
      
       {isCatOpen && (
-        <div className="overflow-y-scroll h-24 absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
+        <div className="overflow-y-scroll w-full h-32 absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
           <div className="py-1">
             {
             catData.map((item,index)=>{
@@ -492,7 +492,7 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
               </label>
      
       {isSubcatOpen && (
-        <div className="absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
+        <div className="absolute z-10 mt-2 overflow-y-scroll h-32 w-full bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
           <div className="py-1">
           {
             subCates.subcategory.map((item,index)=>{
@@ -501,7 +501,7 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
               onClick={(e)=>handleSubcategory(e,item)}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
-              <li style={{listStyle:"none"}}>{item[0]}</li>
+              <li style={{listStyle:"none"}}>{item}</li>
             </button>
             )})
             }

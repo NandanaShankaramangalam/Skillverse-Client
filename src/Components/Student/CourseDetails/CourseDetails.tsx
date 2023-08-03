@@ -10,6 +10,8 @@ import { studentLogged } from '../../../redux/student/studentSlice';
 import { Rating } from 'react-simple-star-rating'
 import {AiOutlineStar} from 'react-icons/ai'
 import { tutorLogged } from '../../../redux/tutor/tutorSlice';
+// import Ratings from '../Rating/Rating';
+import RatingsAndReviews from '../Rating/Rating';
 
 function CourseDetails() {
   const navigate = useNavigate();
@@ -18,12 +20,14 @@ function CourseDetails() {
   const courseId = studentSlice.selectedCourseId;
   const studId:string = studentSlice.studId;
   const tutorSlice = useSelector((state:any)=>state.tutor);
-  const [courseDetails,setCourseDetails] = useState({_id:'',title:'',fee:'',category:'',thumbnail:'',video:'',tutId:'',description:'',paymentStatus:false,students:[studId],tutorial:[{title:'',video:''}]})
+  const [courseDetails,setCourseDetails] = useState({_id:'',title:'',fee:'',category:'',thumbnail:'',video:'',tutId:'',description:'',paymentStatus:false,students:[studId],tutorial:[{title:'',video:'',description:''}]})
   const [review,setReview] = useState('');
-  const [allReviews,setAllReviews] = useState([{review:'',studId:{username:''}}]);
+  const [allReviews,setAllReviews] = useState([{review:'',studId:{username:''},rating:''}]);
   const [err,setErr] = useState({reviewErr:''})
   const [isOpen,setIsOpen] = useState(false);
-  const [rating, setRating] = useState(0)
+  const [rate,setRate] = useState(false);
+  const [rating, setRating] = useState(0); 
+  // const [openRaingModal,setOpenRatingModal] = useState(false);
   // const [studData,setStudData] = useState({courses:[{id:'',paymentStatus:''}]});
   // const videoRef = useRef<HTMLVideoElement>(null);
   // const [videoDuration, setVideoDuration] = useState(0);
@@ -35,7 +39,7 @@ function CourseDetails() {
     console.log('siddd=',studId);
     handleAllReviewFetch();
     
-  },[])
+  },[rate])
   const fetchData = async() =>{
     const courseData = await api.get(`/course/${courseId}`)
     console.log('cos det =',courseData.data);
@@ -87,6 +91,7 @@ function CourseDetails() {
 
   const handleOpenModal = () =>{
     setIsOpen(true);
+    console.log('modal open',isOpen);
   }
   const handleCloseModal = () =>{
     setIsOpen(false);
@@ -162,7 +167,7 @@ function CourseDetails() {
               <div className={`hover:bg-custom-blue  rounded-sm ps-2 py-3`}>
                 <h1 className='cursor-pointer text-white'>
                   {courseDetails.students.includes(studId) ?
-                  <button onClick={()=>{navigate(`/course-attend/${courseDetails._id}`,{state:item.video});
+                  <button onClick={()=>{navigate(`/course-attend/${courseDetails._id}`,{state:{video:item.video,Vtitle:item.title,Vdescription:item.description}});
                   //check
                   dispatch(tutorLogged({...tutorSlice,courseId:courseDetails._id}));
                 }}><FontAwesomeIcon icon={faCirclePlay} className=' hover:text-white font-thin mr-3 '/></button>
@@ -226,7 +231,12 @@ function CourseDetails() {
           <div className='flex '>
            <img src="/images/nophoto.png" alt="" className='h-10 bg-slate-800 rounded-full'/>   
            <h1 className='ml-3 text-md font-semibold'>{obj.studId.username}</h1>
-          </div>
+           {parseInt(obj.rating)>0?
+           <span className='ml-4 px-1 pt-1 text-base rounded-md h-7 text-white bg-custom-blue'><span>{obj.rating}.0 </span><FontAwesomeIcon icon={faStar} className=' text-yellow-400 text-base'/></span> 
+          :
+          <span></span> 
+          }
+           </div>
           <span className='ml-12 text-sm'>{obj.review}</span>
           </div>
          )
@@ -274,49 +284,18 @@ function CourseDetails() {
       </div>
       {/* //rating modal */}
       {
-        isOpen && 
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <div className='flex justify-end'>
-            <button onClick={handleCloseModal}>
-              <FontAwesomeIcon icon={faTimes} />
-            </button> 
-          </div>
-          <div className='text-center'>
-            <h1 className='font-bold'>How do you rate the course?</h1>
-          </div>
-          <form>
-            {/* <div className='flex justify-center mt-5 mb-5'>
-              <AiOutlineStar style={{fontSize:'30px'}}/>
-              <AiOutlineStar style={{fontSize:'30px'}}/>
-              <AiOutlineStar style={{fontSize:'30px'}}/>
-              <AiOutlineStar style={{fontSize:'30px'}}/>
-              <AiOutlineStar style={{fontSize:'30px'}}/>
-            </div>  */}
-
-
-           {/* <div className="rating">
-              <input type="radio" id="star5" name="rating" value="5" />
-              <label className="star"  title="Awesome" aria-hidden="true"></label>
-              <input type="radio" id="star4" name="rating" value="4" />
-              <label className="star"  title="Great" aria-hidden="true"></label>
-              <input type="radio" id="star3" name="rating" value="3" />
-              <label className="star"  title="Very good" aria-hidden="true"></label>
-              <input type="radio" id="star2" name="rating" value="2" />
-              <label className="star"  title="Good" aria-hidden="true"></label>
-              <input type="radio" id="star1" name="rating" value="1" />
-              <label className="star"  title="Bad" aria-hidden="true"></label>
-            </div> */}
-
-
-            {/* <div className='flex justify-center'>
-              <button className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md hover:bg-gray-700 transition duration-150 ease-out">
-                submit 
-              </button>
-            </div> */}
-          </form>
-        </div>
-      </div>
+        isOpen &&  
+        <RatingsAndReviews setIsOpen={setIsOpen} isOpen={isOpen} courseId={courseId} setRate={setRate} rate={rate}/>
+      //   <div className="fixed inset-0 flex items-center justify-center z-50">
+      //   <div className="bg-white p-6 rounded-lg shadow-lg">
+      //     <div className='flex justify-end'>
+      //       <button onClick={handleCloseModal}>
+      //         <FontAwesomeIcon icon={faTimes} />
+      //       </button> 
+      //       <RatingsAndReviews/>
+      //     </div>
+      //   </div>
+      // </div>
 }
     </div>
   )
