@@ -16,6 +16,7 @@ function PayPal() {
     const studentSlice = useSelector((state:any)=>state.student);
     const courseId = studentSlice.selectedCourseId;
     const studId = studentSlice.studId;
+    const tutId = state.tutId;
     useEffect(()=>{
         console.log("hiii=",state.title);
         console.log('kk=',state);
@@ -39,9 +40,16 @@ function PayPal() {
         onApprove : async (data:any,actions:any) =>{
            const order = await actions.order.capture();
            console.log(order,"hey"); 
+           const fee = state.fee;
            if(order.status === 'COMPLETED')  {
-             const result = await api.post('/payment',{status:true,courseId,studId},{ withCredentials: true })
-             console.log('result');
+             const result = await api.post('/payment',{status:true,courseId,studId,fee},{ withCredentials: true })
+             if(result.data){
+              console.log('result');
+              const chat = await api.post('/chat/access-chat',{studId,tutId},{withCredentials:true});
+              console.log('chattsss=',chat.data);
+              
+             }
+             console.log('edededededede');    
              navigate(`/course/${courseId}`);
            } 
         },

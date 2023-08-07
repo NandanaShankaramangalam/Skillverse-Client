@@ -198,7 +198,7 @@ function Chat(props: role) {
                           </span>
                         </div>
                         <span className="block ml-2 text-sm text-gray-600">
-                          {obj.latestMessage.content}
+                          {obj.latestMessage?.content}
                         </span>
                       </div>
                     </a>

@@ -64,16 +64,16 @@ function Navbar() {
         <span>Dashboard</span>
       </button>
     </li>
-    <li>
+    {/* <li>
       <button>
         <span>Students</span>
       </button>
-    </li>
-    <li>
+    </li> */}
+    {/* <li>
       <button >
         <span>Courses</span>
       </button>
-    </li>
+    </li> */}
     <li>
       {/* <button 
       onClick={handleLogout}

@@ -36,6 +36,8 @@ import Profile from "./Components/Student/StudentProfile/Profile";
 import TutorList from "./Pages/Student/TutorList";
 import TutorProfile from "./Pages/Student/TutorProfile";
 import StudentList from "./Pages/Tutor/StudentList";
+import CourseTutorials from "./Pages/Tutor/CourseTutorials";
+import MainDashboard from "./Pages/Tutor/MainDashboard";
 // import Profile from "./Components/Student/Profile/Profile";
 
 function App() {
@@ -72,7 +74,7 @@ function App() {
           <Route path="/bookmarked-courses" element={<Bookmarks></Bookmarks>}/>
           <Route path="/purchased-courses" element={<Purchased></Purchased>}/>
           <Route path="/admin/login" Component={AdminLoginForm} />
-          <Route path="/admin/dashboard" Component={AdminDashboard} />
+          {/* <Route path="/admin/dashboard" Component={AdminDashboard} /> */}
           <Route
             path="/admin/student-management"
             Component={StudentManagement}
@@ -82,6 +84,9 @@ function App() {
             path="/admin/category-management"
             Component={CategoryManagement}
           />
+          <Route path="/admin/dashboard" Component={AdminDashboard}/>
+
+
           <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>}/>
           <Route path="/reset-password" element={<ResetPassword></ResetPassword>}/>
           {/* <Route path="/personal-info" element={<StudentProfile></StudentProfile>}/> */}
@@ -96,6 +101,8 @@ function App() {
           <Route path={`/tutor/profile`} Component={ViewProfile} />
           <Route path="/tutor/courses" Component={Courses}/>
           <Route path={`/tutor/course/${courseId}`} Component={TutorCourseDetails}/>
+          <Route path={`/course-tutorials/:courseId`} element={<CourseTutorials></CourseTutorials>}/>
+          <Route path={`/tutor/tutor-dashboard`} element={<MainDashboard></MainDashboard>}/>
           {/* <Route path='/tutor/video-upload' Component={VideoUpload}/> */}
 
           <Route path="/chat" element={<Chats role={'student'}></Chats>}/>

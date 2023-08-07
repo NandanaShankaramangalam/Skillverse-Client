@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../../services/axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlay, faLock, faStar, faTimes, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlay, faEllipsisVertical, faLock, faStar, faTimes, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import './CourseDetails.css';
 import { studentLogged } from '../../../redux/student/studentSlice';
@@ -198,7 +198,9 @@ function CourseDetails() {
               </div>
               <div className='ps-9 mb-3'>
                 <button className="bg-custom-blue text-white py-2 md:px-6 text-sm rounded-md w-72 hover:bg-gray-700 transition duration-150 ease-out"
-                onClick={()=>navigate('/paypal',{state:courseDetails})}>
+                // onClick={()=>navigate('/paypal',{state:{courseDetails:courseDetails,tutId:cou}})}
+                onClick={()=>navigate('/paypal',{state:courseDetails})}
+                >
                    Buy now
                 </button>
               </div> 
@@ -226,18 +228,30 @@ function CourseDetails() {
         allReviews.length !==0 ?
        <div className='h-96 pt-2 bg-slate-100 overflow-y-scroll'>
        {
-         allReviews.map((obj)=>
-         <div className='mt-3 ms-2'>
+         allReviews.map((obj,idx)=>
+         <div key={idx} className='flex w-full relative'>
+         <div className='mt-3 ms-2 w-full '>
           <div className='flex '>
            <img src="/images/nophoto.png" alt="" className='h-10 bg-slate-800 rounded-full'/>   
            <h1 className='ml-3 text-md font-semibold'>{obj.studId.username}</h1>
            {parseInt(obj.rating)>0?
            <span className='ml-4 px-1 pt-1 text-base rounded-md h-7 text-white bg-custom-blue'><span>{obj.rating}.0 </span><FontAwesomeIcon icon={faStar} className=' text-yellow-400 text-base'/></span> 
-          :
+           :
           <span></span> 
           }
            </div>
-          <span className='ml-12 text-sm'>{obj.review}</span>
+           <span className='ml-12 text-sm'>{obj.review}</span>
+           <div className="flex w-fit h-fit   absolute top-2 right-5">
+            <span><FontAwesomeIcon icon={faEllipsisVertical} className='text-gray-700'/></span>
+           </div>
+           {/* <button
+      className='ml-auto text-gray-500 hover:text-red-500'
+   
+    >
+      <FontAwesomeIcon icon={faTrash} className='text-base'/>
+    </button> */}
+          </div>
+          
           </div>
          )
 

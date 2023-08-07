@@ -68,10 +68,14 @@ function CourseList() {
                     />
                   </div>
                   <div className="pt-2 ps-1">
-                    <span className="text-gray-700 font-bold">
+                  <h1 className="text-gray-700">{course.title}</h1>
+                  <p className='line-clamp-2 text-sm text-gray-400'>{course.description}</p>
+                  <div className='flex justify-between text-sm mr-3 pt-4'>
+                     <span className='text-gray-700 '>{course.subcategory}</span>
+                     <span className="text-gray-700 font-bold ">
                       ₹{course.fee}
                     </span>
-                    <h1 className="text-gray-700">{course.title}</h1>
+                  </div>   
                   </div>
                   <div className="pt-10 ps-1">
                     {/* <button className="bg-yellow-500 text-black py-2 px-6 text-sm rounded-md hover:bg-yellow-400 transition duration-150 ease-out">

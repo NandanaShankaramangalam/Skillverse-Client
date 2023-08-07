@@ -539,8 +539,6 @@ const [isSubcatOpen, setIsSubcatOpen] = useState(false);
               cols={30}
               rows={10}
               style={{ resize: "none" }}
-            //   value={(e)=>e.target.value}
-            //   onChange={addData}
             value={description} 
             onChange={handleDescriptionChange}
             ></textarea>

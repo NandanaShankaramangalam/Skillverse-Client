@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import {BsBookmark} from 'react-icons/bs';
 import {BsBookmarkFill} from 'react-icons/bs';
+import {BsSearch} from 'react-icons/bs'
+import { serialize } from "v8";
 interface CategoryData {
   category: string;
   subcategory: [string];
@@ -38,12 +40,44 @@ function CourseList() {
   const [catData, setCatData] = useState<CategoryData[]>([]);
   const [courses, setCourses] = useState<Courses[]>([]);
   const [isBookmark,setIsBookmark] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredSearchList, setFilteredSearchList] = useState<Courses[]>([]);
+
+  // const [query,setQuery] = useState('');
+  // const [searchResult,setSearchResult] = useState([]);
+  // const [key,setKey] = useState('');
   useEffect(() => {
     // console.log('selcat===',selectedCategory);
     
     fetchCatData();
     fetchCourseData();
   }, [isBookmark,selectedCategory]);
+
+  // const search = async() =>{
+  //   try{
+  //     if(!key.trim()){
+  //       setSearchResult([]);
+  //       return;
+  //     }
+  //     const limit = 5;
+  //     const res = await api.get(`/search/${key}/${limit}`)
+  //   }catch(error){
+  //     console.log(error);
+      
+  //   }
+  // }
+  useEffect(() => {
+    console.log('ssee=');
+    
+    const filteredList = courses.filter((item) => {
+      const titleMatch = item.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      
+      return titleMatch;
+    });
+    setFilteredSearchList(filteredList);
+  }, [searchQuery, courses]);
 
   const fetchCatData = async () => {
     try {
@@ -105,9 +139,24 @@ function CourseList() {
           }
              {/* <h1 className="text-center">{studentSlice?.selectedCategory}</h1> */}
         </div>
+        <div className="md:col-span-5 col-span-7  bg-gray-100 pt-6">
+         <div className="pb-1 flex justify-center">
+          <input type="search" className="border border-gray-300 h-10 outline-none rounded-md w-1/2 px-2"
+          placeholder={`search...`}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          />
+         </div>
+         <div className="flex justify-center pb-6">
+         {/* <div className=" bg-red-800 h-40 w-1/2 overflow-y-scroll">
+          {filteredSearchList.map((obj)=><li>{obj.title}</li>)}
+         </div> */}
+         </div>
+         {/* <div className="bg-red-800 h-20">
+          {filteredSearchList.map((obj)=><li>{obj.title}</li>)}
+         </div> */}
 
-        <div className="md:col-span-5 col-span-7  bg-gray-100 pt-10">
-          <h1 className="font-medium text-xl"> Courses</h1>
+          {/* <h1 className="font-medium text-xl"> Courses</h1> */}
 
           {/* {courses.map(course => {
         return(
@@ -141,7 +190,7 @@ function CourseList() {
           </div>
 
           <div className="mt-5 grid grid-cols-3 gap-1 pe-16 mb-5">
-            {courses.map((course) => {
+            {filteredSearchList.map((course) => {
               return (
                 <div
                   key={course._id}

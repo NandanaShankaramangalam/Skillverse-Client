@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { api } from '../../../services/axios';
 import CourseCreation from '../CourseCreation/CourseCreation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 function CourseDetails() {
-    const [courseDetails,setCourseDetails] = useState({title:'',fee:'',category:'',thumbnail:'',video:'',tutId:'',description:'',tutorial:[{title:''}]})
+  const navigate = useNavigate();
+    const [courseDetails,setCourseDetails] = useState({_id:'',title:'',fee:'',category:'',thumbnail:'',video:'',tutId:'',description:'',tutorial:[{title:'',video:'',description:''}]})
     const tutorSlice = useSelector((state:any)=>state.tutor);
     const courseId = tutorSlice.courseId;
     const [isOpen,setIsOpen] = useState(false);
@@ -45,13 +49,16 @@ function CourseDetails() {
           <img src={`${process.env.REACT_APP_S3BUCKET_URL}/${courseDetails.thumbnail}`} alt={courseDetails.title} className='h-60'/>
         </div>
         
-        <div className='bg-red-300'>
+        <div className='bg-red-300 w-2/3'>
          <h1 className='text-xl text-black mb-2'>Lessons in this class</h1>
          {
            courseDetails.tutorial.map((item,index)=>{
             return(
              <> 
-              <h1 className='cursor-pointer'><span key={index}>{index+1}.</span> {item.title}</h1>
+             <div onClick={()=>navigate(`/course-tutorials/${courseDetails._id}`,{state:{video:item.video,Vtitle:item.title,Vdescription:item.description}})} className={`hover:bg-custom-blue  rounded-sm ps-2 py-3`}>
+              <h1 className='cursor-pointer hover:text-white'><FontAwesomeIcon icon={faCirclePlay} className=' hover:text-white font-thin mr-3 '/> 
+              <span key={index}>{index+1}.</span> {item.title}</h1>
+             </div>
              </>
              
             )
