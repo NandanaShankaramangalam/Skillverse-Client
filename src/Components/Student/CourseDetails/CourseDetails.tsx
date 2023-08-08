@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../../services/axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlay, faEllipsisVertical, faLock, faStar, faTimes, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlay, faEllipsisVertical, faL, faLock, faStar, faTimes, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import './CourseDetails.css';
 import { studentLogged } from '../../../redux/student/studentSlice';
@@ -16,18 +16,29 @@ import RatingsAndReviews from '../Rating/Rating';
 function CourseDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const tutId = location.state;
+  console.log('ttttuutt=',tutId);
   const studentSlice = useSelector((state:any)=>state.student);
   const courseId = studentSlice.selectedCourseId;
   const studId:string = studentSlice.studId;
   const tutorSlice = useSelector((state:any)=>state.tutor);
   const [courseDetails,setCourseDetails] = useState({_id:'',title:'',fee:'',category:'',thumbnail:'',video:'',tutId:'',description:'',paymentStatus:false,students:[studId],tutorial:[{title:'',video:'',description:''}]})
   const [review,setReview] = useState('');
-  const [allReviews,setAllReviews] = useState([{review:'',studId:{username:''},rating:''}]);
+  const [allReviews,setAllReviews] = useState([{_id:'',review:'',studId:{username:'',_id:''},rating:''}]);
   const [err,setErr] = useState({reviewErr:''})
   const [isOpen,setIsOpen] = useState(false);
   const [rate,setRate] = useState(false);
   const [rating, setRating] = useState(0); 
-  // const [openRaingModal,setOpenRatingModal] = useState(false);
+  const [istoolTip,setIsToolTip] = useState(false);
+  const [isEditOpen,setIsEditOpen] = useState(false);
+  const [edit,setEdit] = useState(false)
+  const [newReview,setNewReview] = useState('');
+  const [reviewId,setReviewId] = useState('')
+  const [state,setState] = useState(false);
+  const [revId,setRevId] = useState('');
+  const [tutorData,setTutorData] = useState({username:'',profileLocation:'',niche:''});
+  // const [openRatingModal,setOpenRatingModal] = useState(false);
   // const [studData,setStudData] = useState({courses:[{id:'',paymentStatus:''}]});
   // const videoRef = useRef<HTMLVideoElement>(null);
   // const [videoDuration, setVideoDuration] = useState(0);
@@ -38,8 +49,8 @@ function CourseDetails() {
     console.log('cid=',courseId);
     console.log('siddd=',studId);
     handleAllReviewFetch();
-    
-  },[rate])
+    fetchTutorData();
+  },[rate,state])
   const fetchData = async() =>{
     const courseData = await api.get(`/course/${courseId}`)
     console.log('cos det =',courseData.data);
@@ -48,6 +59,14 @@ function CourseDetails() {
       const paymentStatus = true;
       dispatch(studentLogged({...studentSlice,paymentStatus:paymentStatus}))
     }
+  }
+  const fetchTutorData = async() =>{
+    const res= await api.get(`/view-tutor-profile/${tutId}`);
+    if(res.data){
+      console.log('res.data=',res.data);
+      setTutorData(res.data.tutorData);
+    }
+    
   }
   const handleAlert = () =>{
     Swal.fire('Purchase to access the course!');
@@ -78,7 +97,6 @@ function CourseDetails() {
   const handleAllReviewFetch = async() =>{
     const result = await api.get(`/view-reviews/${courseId}`);
     console.log('allrev=',result.data.postedReviews);
-    
     setAllReviews(result.data.postedReviews)
   }
 
@@ -96,7 +114,33 @@ function CourseDetails() {
   const handleCloseModal = () =>{
     setIsOpen(false);
   }
- 
+  const showTooltip = () =>{
+    setIsToolTip(true);
+  }
+  const hideTooltip = () =>{
+    setIsToolTip(false);
+  }
+
+  const editReview = (e:React.ChangeEvent<HTMLInputElement>) =>{
+     setNewReview(e.target.value);
+  }
+
+  const handleReviewUpdate = async(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
+    e.preventDefault();
+    const res = await api.post('/edit-reviews',{reviewId,newReview},{withCredentials:true});
+    if(res.data){
+      console.log('res.data=',res.data);
+      setEdit(false);
+      setState(!state);
+    }  
+  }
+
+  const handleReviewDelete = async(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
+    e.preventDefault();
+    const res = await api.post('/delete-reviews',{reviewId});
+    console.log('resss=',res.data);
+    setState(!state);
+  }
   // const fetchStudData = async() =>{
   //   console.log('okkk');
   //   const response = await api.get(`/student/${studId}`);
@@ -128,8 +172,9 @@ function CourseDetails() {
   //   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   // };
   return (
-    <div className='mt-1'>
-      <div className='bg-custom-blue h-72 grid grid-cols-8'>
+    // <div className={`mt-1 ${edit?'blur':''}`}>
+     <div className='mt-1'>
+      <div className={`bg-custom-blue h-72 grid grid-cols-8`}>
         <div className='col-span-8 md:col-span-3  ps-16'>
           <div className="course-card pt-3">
           <video controls onContextMenu={(e) => e.preventDefault()} src={`${process.env.REACT_APP_S3BUCKET_URL}/${courseDetails?.video}`}
@@ -143,6 +188,16 @@ function CourseDetails() {
           <div className='mt-20 text-white'>
             <h1 className='text-5xl ms-4'>{courseDetails.title}</h1>
           </div>
+          <div className='flex'>
+            <div className='w-12 h-12 mt-6 rounded-full overflow-hidden border border-black'>
+            <img src={`${process.env.REACT_APP_S3BUCKET_URL}/${tutorData.profileLocation}`} alt="tutor-image"/>
+            </div>
+            <div className='ps-4 mt-10'>
+              <h1 onClick={()=>navigate('/view-tutor-profile',{state:{tutId:tutId,username:tutorData.username}})} className='text-white cursor-pointer hover:text-blue-900'>
+                {tutorData.username}, {tutorData.niche}</h1>
+            </div>
+          </div>
+         
         </div>
       </div>
 
@@ -229,7 +284,7 @@ function CourseDetails() {
        <div className='h-96 pt-2 bg-slate-100 overflow-y-scroll'>
        {
          allReviews.map((obj,idx)=>
-         <div key={idx} className='flex w-full relative'>
+         <div key={idx} className='flex w-full relative' onMouseOver={()=>showTooltip()} onMouseOut={()=>hideTooltip()}>
          <div className='mt-3 ms-2 w-full '>
           <div className='flex '>
            <img src="/images/nophoto.png" alt="" className='h-10 bg-slate-800 rounded-full'/>   
@@ -241,9 +296,58 @@ function CourseDetails() {
           }
            </div>
            <span className='ml-12 text-sm'>{obj.review}</span>
-           <div className="flex w-fit h-fit   absolute top-2 right-5">
-            <span><FontAwesomeIcon icon={faEllipsisVertical} className='text-gray-700'/></span>
-           </div>
+           {
+            istoolTip && obj.studId._id===studId &&
+            <div className="flex w-fit h-fit   absolute top-2 right-5">
+              <span><FontAwesomeIcon icon={faEllipsisVertical} className='text-gray-700' onClick={()=>{setIsEditOpen(!isEditOpen);setRevId(obj._id);setNewReview(obj.review);
+              setReviewId(obj._id)
+              }}/></span>
+               {isEditOpen && revId==obj._id &&(
+          <div className='absolute right-0 top-0 mt-6 mr-2 bg-white border rounded p-2 flex'>
+            <button className='text-red-600 hover:text-red-800 mr-2' onClick={(e)=>handleReviewDelete(e)}>Delete</button>
+            <button className='text-blue-600 hover:text-blue-800' onClick={()=>setEdit(true)} >Edit</button>
+          </div>
+        )}
+            </div>
+           }
+           {/* {isEditOpen && (
+          <div className='absolute right-0 top-0 mt-8 mr-2 bg-white border rounded p-2'>
+            <button className='text-red-600 hover:text-red-800 mr-2' onClick={(e)=>handleReviewDelete(e)}>Delete</button>
+            <button className='text-blue-600 hover:text-blue-800' onClick={()=>setEdit(true)} >Edit</button>
+          </div>
+        )} */}
+        {edit && 
+        <div className='fixed inset-0 flex  justify-center z-50 top-56 shadow-md'>
+        <div className='bg-white h-44 w-96 rounded-md pb-10'>
+        <div className='flex justify-end pt-3 pe-3'>
+          <button onClick={() => {setEdit(false);}}>
+            <FontAwesomeIcon icon={faXmark} className='font-thin text-xl text-gray-400'></FontAwesomeIcon>
+          </button>
+        </div>
+        <div className='text-center font-semibold'><h1>Edit Review</h1></div>
+        <div className="mb-3 mt-3 mx-4">
+            <label htmlFor="formInputControl1" className="text-sm ">
+            </label>
+            <input
+              type="text"
+              id="formInputControl1"
+              className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+              name="review"
+              value={newReview}
+              onChange={(e)=>editReview(e)}
+            />
+          </div>
+          <div className='text-center pb-3'>
+          <button
+              className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md hover:bg-gray-700 transition duration-150 ease-out"
+              onClick={(e)=>handleReviewUpdate(e)}
+            >
+              Update
+            </button>
+            </div> 
+        </div>
+        </div>
+        }
            {/* <button
       className='ml-auto text-gray-500 hover:text-red-500'
    

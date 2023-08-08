@@ -114,7 +114,7 @@ function Chat(props: role) {
     <div className="container mx-auto">
       <div className="min-w-full border rounded lg:grid lg:grid-cols-3">
         <div className="border-r border-gray-300 lg:col-span-1">
-          <div className="mx-3 my-3">
+          <div className="mx-3 my-3 ">
             <div className="relative text-gray-600">
               <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                 <svg
@@ -217,7 +217,7 @@ function Chat(props: role) {
               <span className="block ml-2 font-bold text-gray-600">Nihal</span>
               <span className="absolute w-3 h-3 bg-green-600 rounded-full left-10 top-3"></span>
             </div>
-            <div className="relative w-full p-6 overflow-y-auto h-[40rem]">
+            <div className="relative w-full p-6 overflow-y-auto h-[30rem]">
               <ul className="space-y-2">
                 {props.role === "student"
                   ? messages.map((obj) => (

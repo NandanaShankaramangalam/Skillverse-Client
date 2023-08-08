@@ -6,6 +6,8 @@ import { validate } from './Validate';
 import { api } from '../../../services/axios';
 import AddSubcategory from './AddSubcategory';
 import EditCategory from './EditCategory';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 interface Category{
     category : string;
     // subcategory : string;
@@ -150,6 +152,25 @@ function CategoryManagement() {
           }
           console.log('iddd',id);
         }
+
+        const notifySuccess = () => {
+          toast.success('New Category added', {
+            position: toast.POSITION.BOTTOM_CENTER,
+            autoClose: 1500,
+          });
+        };
+        const notifyCatInactive = () =>{
+          toast.error('Category inactive', {
+            position: toast.POSITION.BOTTOM_CENTER,
+            autoClose: 1500,
+          });
+        }
+        const notifyCatActive = () =>{
+          toast.success('Category active', {
+            position: toast.POSITION.BOTTOM_CENTER,
+            autoClose: 1500,
+          });
+        }
   return (
     <div className='mt-5'>
         <div className='flex justify-end mr-11 mb-2'>
@@ -208,9 +229,9 @@ function CategoryManagement() {
                 {
 
                        item.status?
-                       <button className='rounded-full border px-7 py-2 border-green-600 bg-green-600 text-white' onClick={(e)=>handleList(e,item._id)}>Active </button>
+                       <button className='rounded-full border px-7 py-2 border-green-600 bg-green-600 text-white' onClick={(e)=>{handleList(e,item._id);notifyCatInactive()}}>Active </button>
                        :
-                       <button className='rounded-full border px-6 py-2 border-red-600 bg-red-600 text-white' onClick={(e)=>handleUnlist(e,item._id)}>Inactive</button>
+                       <button className='rounded-full border px-6 py-2 border-red-600 bg-red-600 text-white' onClick={(e)=>{handleUnlist(e,item._id);notifyCatActive()}}>Inactive</button>
                     }
                 
                 </td>
@@ -263,7 +284,7 @@ function CategoryManagement() {
           {/* <p className="text-red-600 text-sm">{errors.subcate}</p> */}
 
               <div className='flex justify-center'>
-                <button className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
+                <button onClick={notifySuccess} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
                  Add
                 </button> 
               </div>
@@ -308,6 +329,7 @@ function CategoryManagement() {
       )} */}
       {isAddOpen && <AddSubcategory cid={addData.cid} catname={addData.catname} isAddOpen={isAddOpen} setIsAddOpen={setIsAddOpen} fetchData={fetchData}/>}
       {isEditOpen && <EditCategory cid={addData.cid} catname={addData.catname} isEditOpen={isEditOpen} setIsEditOpen={setIsEditOpen} fetchData={fetchData}/>}
+      <ToastContainer />
 </div> 
   )
 }

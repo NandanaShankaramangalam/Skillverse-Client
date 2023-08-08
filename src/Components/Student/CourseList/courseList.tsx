@@ -208,7 +208,7 @@ function CourseList() {
                       className=" rounded-md object-fill"
                       onClick={()=>{
                         dispatch(studentLogged({ ...studentSlice, selectedCourseId: course._id }));
-                        navigate(`/course/${course._id}`);
+                        navigate(`/course/${course._id}`,{state:course.tutId});
                       }}
                     />
                   </div>

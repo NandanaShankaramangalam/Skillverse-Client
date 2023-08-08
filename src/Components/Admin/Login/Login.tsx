@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { adminLogged } from '../../../redux/admin/adminSlice';
-
+import Swal from 'sweetalert2';
 type AdminLogin = {
     username : string,
     password : string  
@@ -122,6 +122,20 @@ function Login() {
         
     
     }
+
+    const handleAlert = ()=>{
+      Swal.fire({
+        position: 'center', // This will center the alert on the screen
+        icon: 'success',
+        title: 'Login Successful',
+        showConfirmButton: false,
+        timer: 1500,
+        customClass: {
+          popup: 'center-alert', // Apply the custom CSS class
+        },
+      });
+      
+    }
   return (
     <div className=" w-full">
       <div className="flex justify-center mt-16 mb-6">
@@ -165,7 +179,7 @@ function Login() {
           </div>
           
           <div className={`flex justify-center  ${err.invalid? 'mb-2':'mb-5'}`}>
-            <button className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out" onClick={handleLogin}>
+            <button className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out" onClick={(e)=>{handleLogin(e);handleAlert()}}>
               Sign in
             </button>
           </div>

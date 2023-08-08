@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { api } from '../../../services/axios'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
  interface tutData{
         fname:string,
@@ -57,6 +59,13 @@ function TutorManagement() {
         }
          
     }
+
+    const notifySuccess = () => {
+        toast.success('Your work has been saved', {
+          position: toast.POSITION.BOTTOM_CENTER,
+          autoClose: 1500,
+        });
+      };
   return (
 <div className='mt-11'>
 <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-10">
@@ -102,9 +111,9 @@ function TutorManagement() {
                 <td className="px-6 py-4 text-right">
                     {
                        item.status?
-                       <button className='rounded-full border px-5 py-2 border-green-600 bg-green-600 text-white mr-2' onClick={(e)=>handleBlock(e,item._id)}>Block</button>
+                       <button className='rounded-full border px-5 py-2 border-green-600 bg-green-600 text-white mr-2' onClick={(e)=>{handleBlock(e,item._id);notifySuccess()}}>Block</button>
                        :
-                       <button className='rounded-full border px-3 py-2 border-red-600 bg-red-600 text-white mr-2' onClick={(e)=>handleUnblock(e,item._id)}>Unblock</button>
+                       <button className='rounded-full border px-3 py-2 border-red-600 bg-red-600 text-white mr-2' onClick={(e)=>{handleUnblock(e,item._id);notifySuccess();}}>Unblock</button>
                     }
                 
                 {/* <button className='rounded-full border px-3 py-2 border-red-600 bg-red-600 text-white'>Unblock</button> */}
@@ -115,6 +124,7 @@ function TutorManagement() {
         </tbody>
     </table>
 </div>
+<ToastContainer />
 </div> 
   )
 }

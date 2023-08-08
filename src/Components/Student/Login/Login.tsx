@@ -5,7 +5,7 @@ import jwtDecode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { studentLogged } from "../../../redux/student/studentSlice";
 import {CredentialResponse, GoogleLogin} from '@react-oauth/google';
-
+import Swal from 'sweetalert2';
 interface LoginProps {
   userType: string;
 }
@@ -163,7 +163,19 @@ function Login(props: LoginProps) {
   //   }
   // };
 
-  
+  const handleAlert = ()=>{
+    Swal.fire({
+      position: 'center', // This will center the alert on the screen
+      icon: 'success',
+      title: 'Login Successful',
+      showConfirmButton: false,
+      timer: 1500,
+      customClass: {
+        popup: 'center-alert', // Apply the custom CSS class
+      },
+    });
+    
+  }
 
   return (
     <div className=" w-full">
@@ -212,7 +224,7 @@ function Login(props: LoginProps) {
           >
             <button
               className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out"
-              onClick={handleStudentLogin}
+              onClick={(e)=>{handleStudentLogin(e);handleAlert()}}
             >
               Sign in
             </button>
