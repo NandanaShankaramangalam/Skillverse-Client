@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter,faFacebook,faInstagram,faYoutube } from '@fortawesome/free-brands-svg-icons'
 function Footer() {
   return (
-    <div className='mt-10 h-72 md:h-56 bg-custom-blue '>
+    <div className=' h-72 md:h-56 bg-custom-blue '>
     <div className='text-center block justify-center pt-8'>
           <span className='textStyle'>Follow us on:</span>
       <div className='space-x-4 mt-3'>

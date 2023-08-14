@@ -35,7 +35,6 @@ function TutorsProfile() {
         
   return (
     <div>
-    <Navbar/>
   <div className="grid grid-cols-7 gap-4 ">
   <div className="md:col-span-2 col-span-7 bg-gray-100 pt-12"> 
   {/* <SideNavbar/> */}

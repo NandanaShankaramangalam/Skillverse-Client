@@ -18,7 +18,7 @@ function SideNavbar() {
     <div>
         <div className='text-center mt-10'>
            <div className='w-32 h-32 rounded-full overflow-hidden bg-gray-300 mx-auto'>  
-           <img src="./images/photo.jpg" alt="" /> 
+           <img src="./images/nophoto.png" alt="" /> 
            </div>
            <div className='mt-2'>
             <h1 className='text-xl text-slate-950'>{studUsername}</h1>
@@ -30,7 +30,7 @@ function SideNavbar() {
              <span className='text-neon-green text-sm font-bold'>Student</span>
            </div>
            <div className='mb-10 mt-8 w-60 mx-auto'>
-            <hr className='border border-black'/>
+            {/* <hr className='border border-black'/> */}
            </div>
         </div>
         <div className='mb-48 pl-48 md:pl-32'>
@@ -40,7 +40,7 @@ function SideNavbar() {
             <li className='cursor-pointer'><button onClick={()=>navigate('/purchased-courses')}><FontAwesomeIcon icon={faBook} className='text-lg text-cyan-600'/><span className='ml-4 text-base'>Purchased Courses</span></button></li>
             <li className='cursor-pointer'><button onClick={()=>navigate('/bookmarked-courses')}><FontAwesomeIcon icon={faBookmark} className='text-lg text-red-800'/><span className='ml-3 text-base'>Bookmarked Courses</span></button></li>
             {/* <li><FontAwesomeIcon icon={faCalendar} className='text-lg text-green-600'/><span className='ml-4 text-base'>Slots</span></li> */}
-            <li className='cursor-pointer'><FontAwesomeIcon icon={faMessage} className='text-lg text-violet-950'/><span className='ml-4 text-base'>Message</span></li>
+            <li className='cursor-pointer'><button onClick={()=>navigate('/chat')}><FontAwesomeIcon icon={faMessage} className='text-lg text-violet-950'/><span className='ml-4 text-base'>Message</span></button></li>
             {/* <li><FontAwesomeIcon icon={faCoins} className='text-lg text-red-800'/><span className='ml-4 text-base'>Revenue</span></li> */}
             </ul> 
             {/* </div> */}

@@ -21,7 +21,7 @@ function Dashboard() {
     <div>
         <Navbar/>
         <div className="grid grid-cols-7 gap-4">
-            <div className="md:col-span-2 col-span-7 bg-yellow-300">
+            <div className="md:col-span-2 col-span-7 bg-gray-100">
               {/* <SideNavbar/> */}
         {/* <div className='text-center mt-10'>
            <div className='w-32 h-32 rounded-full overflow-hidden bg-gray-300 mx-auto'>  

@@ -18,17 +18,25 @@ function CourseTutorial() {
     const [videoUrl,setVideoUrl] = useState(video);
     const videoName = videoUrl.split('/').pop();
     const [img,setImg] = useState('');
+    const imgName = img.split('/').pop();
     const [title,setTitle] = useState(Vtitle);
     const [description,setDescription] = useState(Vdescription);
-    const [courseDetails,setCourseDetails] = useState({title:'',fee:'',category:'',thumbnail:'',video:'',tutId:'',description:'',tutorial:[{title:'',video:'',thumbnail:'',description:''}]})
+    const [courseDetails,setCourseDetails] = useState({title:'',fee:'',category:'',thumbnail:'',video:'',tutId:'',description:'',tutorial:[{id:'',title:'',video:'',thumbnail:'',description:''}]})
     
-
-    const [newTitle,setNewTitle] = useState(title);
-    const [newDescription,setNewDescription] = useState(description);
-    const [selectedImage, setSelectedImage] = useState<File>(new File([], ''));
+    const [item,setItem] = useState({id:'',title:'',video:'',thumbnail:'',description:'',index:0});
+    // const [newTitle,setNewTitle] = useState(title);
+    const [newTitle,setNewTitle] = useState('');
+    const [newDescription,setNewDescription] = useState('');
+    const [selectedImage, setSelectedImage] = useState<File>(new File([], ""));
     const [ImgLocation,setImgLocation] = useState('');
-    const [selectedVideo, setSelectedVideo] = useState<File>(new File([], ''));
+    const [selectedVideo, setSelectedVideo] = useState<File>(new File([], ""));
     const [VdoLocation,setVdoLocation] = useState('');
+    const [vdoId,setVdoId] = useState('');
+     
+    useEffect(()=>{
+      setNewTitle(item.title)
+      setNewDescription(item.description)
+    },[item])
     useEffect(()=>{
         // console.log('vdoprop=',video);
         const fetchCourseData = async() =>{
@@ -43,7 +51,7 @@ function CourseTutorial() {
         //     navigate('/');
         //  }
           }
-            fetchCourseData();
+          fetchCourseData();
       },[courseId])
       const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         setNewTitle(e.target.value);
@@ -55,32 +63,44 @@ function CourseTutorial() {
         e.preventDefault();
         setNewTitle(title);
         setNewDescription(description);
+        setImgLocation('');
+        setVdoLocation('');
       }
 
-      const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>) =>{
+      const handleImgUpload = async (e: React.ChangeEvent<HTMLInputElement>) =>{
         const file: File | null = e.target.files?.[0] || null;
         setSelectedImage(file as File);
-        console.log('sellll=',selectedImage);
+        console.log('sellllimg=',file);
         // if(selectedImage.name !== ''){
-          uploadImage(e,selectedImage);
-        // }
-        
+          await uploadImage(e,file);
+        // }   
+      }
+
+      const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) =>{
+        const file: File | null = e.target.files?.[0] || null;
+        setSelectedVideo(file as File);
+        console.log('sellllvdo=',file);
+        // if(selectedImage.name !== ''){
+          await uploadVideo(e,file);
+        // }   
       }
       
       const uploadImage = async(e: React.ChangeEvent<HTMLInputElement>,imgFile: any) => {
         e.preventDefault();
+        console.log('immm=',imgFile);
+        
         const imgParams = {
             Body: selectedImage,
             Bucket: s3Config.bucketName,
-            Key: `thumbnails/${imgFile.name}`,
+            Key: `courseThumbnails/${imgFile.name}`,
           };
-          s3.upload(imgParams).promise()
+          await s3.upload(imgParams).promise()
           .then((imgResponse) => {
             
             // Handle the result of the upload
             const imgLoc = `${imgResponse.Key}`;
             setImgLocation(imgLoc);
-            console.log('sel imgg:',selectedImage.name);
+            console.log('sel imgg:',selectedImage);
             console.log('Img location:',imgLoc);
             console.log('Img upload success:',imgResponse);
           })
@@ -90,12 +110,13 @@ function CourseTutorial() {
           }); 
       } 
 
-      const handleVideoUpload = async(e: React.ChangeEvent<HTMLInputElement>,vdoFile:any)=>{
+      const uploadVideo = async(e: React.ChangeEvent<HTMLInputElement>,vdoFile:any)=>{
         e.preventDefault();
+        console.log('vdoo=',vdoFile.name);
         const videoParams = {
           Body: selectedVideo,
           Bucket: s3Config.bucketName,
-          Key: `videos/${vdoFile.name}`,
+          Key: `courses/${vdoFile.name}`,
         };
         s3.upload(videoParams).promise()
           .then((vdoResponse) => {
@@ -114,7 +135,7 @@ function CourseTutorial() {
 
       const handleEditTutorial = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
         e.preventDefault();
-        const result = await api.post('/tutor/edit-tutorials',{courseId,newTitle,newDescription,ImgLocation,VdoLocation},{withCredentials:true})
+        const result = await api.post('/tutor/edit-tutorials',{courseId,newTitle,newDescription,ImgLocation,VdoLocation,img,videoUrl,vdoId,index:item.index},{withCredentials:true})
       }
    return (
     <div>
@@ -136,7 +157,7 @@ function CourseTutorial() {
               return(
                 <>
                 
-  <div className={`ps-5 items-center py-2 rounded ${videoUrl === item.video ? 'shadow border bg-slate-900' : ''}`}>
+  <div className={`relative ps-5 items-center py-2 rounded ${videoUrl === item.video ? 'shadow border bg-slate-900' : ''}`}>
   <div className='flex justify-start relative'>
     <div>
       <img src={`${process.env.REACT_APP_S3BUCKET_URL}/${item.thumbnail}`} alt={courseDetails.title} className='h-24 w-36 rounded-md'
@@ -149,15 +170,17 @@ function CourseTutorial() {
       <h1 key={index} className={`ml-4 ${videoUrl === item.video ? 'text-white' : ''}`}>{index + 1}. {item.title}</h1>
     </div>
     {videoUrl === item.video ? (
-      <div className='pt-1 flex justify-end ps-10'>
+      <div className='absolute top-0 right-1.5 pt-1 flex justify-end ps-10'>
         <span>
           <BsThreeDotsVertical
             className={`${videoUrl === item.video ? 'text-white' : 'text-black'}`}
-            onClick={() => {setIsOpen(!isOpen); setImg(item.thumbnail)}}
+            onClick={() => {setIsOpen(!isOpen); setImg(item.thumbnail); console.log('item',item);
+             setVdoId(item.id);console.log('vidd=',item.id);setItem({...item,index:index})
+            }}
           />
         </span>
         {isOpen && (
-          <div className='absolute right-0 top-0 mt-8 mr-2 bg-white border rounded p-2'>
+          <div className='flex absolute right-0 top-0 mt-8 mr-2 bg-white border rounded p-2'>
             <button className='text-red-600 hover:text-red-800 mr-2' >Delete</button>
             <button className='text-blue-600 hover:text-blue-800' onClick={()=>setIsEditing(true)} >Edit</button>
           </div>
@@ -189,6 +212,7 @@ function CourseTutorial() {
             <div className='text-center'>
                 <h1 className='text-2xl'>Edit Tutorials</h1>
             </div>
+            
             <form action="" className=" w-full px-20 ">
             <div className="mb-3 mt-5">
             <label htmlFor="formInputControl1" className="text-sm ">
@@ -200,6 +224,7 @@ function CourseTutorial() {
               className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
               name="title"
               value={newTitle}
+              // value={item.title}
               onChange={handleTitleChange}
             />
           </div> 
@@ -215,6 +240,7 @@ function CourseTutorial() {
               rows={10}
               style={{ resize: "none" }}
               value={newDescription} 
+              // value={item.description} 
               onChange={handleDescriptionChange}
             ></textarea>
             {/* <p className="text-red-600 text-sm mb-2">{err.description}</p> */}
@@ -226,7 +252,7 @@ function CourseTutorial() {
             className="block py-1 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-700 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file"
             // onChange={handleThumbnailChange}
             />
-            <h1 className='text-gray-500 text-sm'>{img}</h1>
+            <h1 className='text-gray-500 text-sm'>{imgName}</h1>
           </div>
           <div className='mt-3'>
             <h1 className='text-sm'>Upload video tutorial</h1>
@@ -261,7 +287,7 @@ function CourseTutorial() {
                 </p>
                 {/* <p className="text-red-600 text-sm mb-3">{err.thumbnail}</p> */}
               </div>
-              <input onChange={(e)=>handleVideoUpload(e,selectedVideo)} id="dropzone-file" type="file" className="hidden" accept="video/mp4,video/x-m4v,video/*"  name="course" />
+              <input onChange={(e)=>handleVideoUpload(e)} id="dropzone-file" type="file" className="hidden" accept="video/mp4,video/x-m4v,video/*"  name="course" />
               {/* <input id="dropzone-file" type="file" className="hidden" accept="video/mp4,video/x-m4v,video/*"  name="course" onChange={handleUpload}/> */}
             </label>
               </div>

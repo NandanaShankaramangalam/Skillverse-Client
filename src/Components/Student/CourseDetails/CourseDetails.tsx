@@ -23,7 +23,8 @@ function CourseDetails() {
   const courseId = studentSlice.selectedCourseId;
   const studId:string = studentSlice.studId;
   const tutorSlice = useSelector((state:any)=>state.tutor);
-  const [courseDetails,setCourseDetails] = useState({_id:'',title:'',fee:'',category:'',thumbnail:'',video:'',tutId:'',description:'',paymentStatus:false,students:[studId],tutorial:[{title:'',video:'',description:''}]})
+  const [courseDetails,setCourseDetails] = useState({_id:'',title:'',fee:'',category:'',thumbnail:'',video:'',tutId:'',description:'',paymentStatus:false,students:[studId],tutorial:[{title:'',video:'',description:''}]
+   ,stud:[{id:'',date:''}]})
   const [review,setReview] = useState('');
   const [allReviews,setAllReviews] = useState([{_id:'',review:'',studId:{username:'',_id:''},rating:''}]);
   const [err,setErr] = useState({reviewErr:''})
@@ -188,7 +189,7 @@ function CourseDetails() {
           <div className='mt-20 text-white'>
             <h1 className='text-5xl ms-4'>{courseDetails.title}</h1>
           </div>
-          <div className='flex'>
+          <div className='flex ps-4'>
             <div className='w-12 h-12 mt-6 rounded-full overflow-hidden border border-black'>
             <img src={`${process.env.REACT_APP_S3BUCKET_URL}/${tutorData.profileLocation}`} alt="tutor-image"/>
             </div>
@@ -209,25 +210,25 @@ function CourseDetails() {
           <div className='pe-36 pt-3 pb-7'>
             <p>{courseDetails.description}</p>
           </div>
-          <div className='pb-5 '>
+          {/* <div className='pb-5 '>
             <img src={`${process.env.REACT_APP_S3BUCKET_URL}/${courseDetails.thumbnail}`} alt={courseDetails.title} className='h-60'/>
-          </div>
-          <div className='bg-red-300'>
-         <h1 className='text-xl text-black mb-2'>Lessons in this class</h1>
+          </div> */}
+          <div className='bg-slate-100 w-3/4'>
+         <h1 className='text-xl text-black mb-2 p-2'>Lessons in this class</h1>
          {
            courseDetails.tutorial.map((item,index)=>{
             return(
              <> 
               {/* <h1 className='cursor-pointer'><span key={index}>{index+1}.</span> {item.title} (Duration: {formatDuration(videoDuration)})</h1> */}
-              <div className={`hover:bg-custom-blue  rounded-sm ps-2 py-3`}>
-                <h1 className='cursor-pointer text-white'>
+              <div className={`hover:bg-custom-blue  text-black hover:text-white  rounded-sm ps-2 py-3`}>
+                <h1 className='cursor-pointer'>
                   {courseDetails.students.includes(studId) ?
                   <button onClick={()=>{navigate(`/course-attend/${courseDetails._id}`,{state:{video:item.video,Vtitle:item.title,Vdescription:item.description}});
                   //check
                   dispatch(tutorLogged({...tutorSlice,courseId:courseDetails._id}));
-                }}><FontAwesomeIcon icon={faCirclePlay} className=' hover:text-white font-thin mr-3 '/></button>
+                }}><FontAwesomeIcon icon={faCirclePlay} className='font-thin mr-3 '/></button>
                   :
-                  <button onClick={handleAlert}><FontAwesomeIcon icon={faLock} className='text-white font-thin mr-3 '/></button>
+                  <button onClick={handleAlert}><FontAwesomeIcon icon={faLock} className='font-thin mr-3 '/></button>
                   }
                   <span key={index}>{index+1}.</span> {item.title}</h1>
               </div>
@@ -242,14 +243,14 @@ function CourseDetails() {
       
         <div className='col-span-11 md:col-span-4 '>
           <div>
-            {!courseDetails.students.includes(studId) &&
+            {!courseDetails.students.includes(studId) ?
             <div className='bg-gray-100 mx-5 mt-14 me-28 rounded-md pt-5 shadow-lg'>
             <div className='ps-6 mb-3'>
                   <h1 className='text-2xl font-extrabold'>Checkout</h1>
                 </div>
               <div className='ps-6 mb-3'>
                 
-                <h1>  Total : <span className='font-bold'>₹{courseDetails.fee}</span></h1>
+                <h1>  Total : <span className='font-bold'>${courseDetails.fee}</span></h1>
               </div>
               <div className='ps-9 mb-3'>
                 <button className="bg-custom-blue text-white py-2 md:px-6 text-sm rounded-md w-72 hover:bg-gray-700 transition duration-150 ease-out"
@@ -263,6 +264,21 @@ function CourseDetails() {
                 <img src="\images\payment.png" alt="" className='h-28 mb-8'/>      
               </div>  
             </div>
+            :
+            // <div className='bg-gray-100 h-96 w-96 mx-5 mt-14 me-28 rounded-md p-5  shadow-lg'>
+            //   <div>
+            //     <img src="/images/online-training-woman.jpg" alt="" className=''/>
+            //   </div>
+            // </div>
+            <div className=' h-96 w-96 mx-5 mt-14 me-28 rounded-md p-5 pt-0 shadow-lg relative'>
+            <div className="absolute top-80 left-0 right-0 text-center">
+              <span>Purchased on : {courseDetails.stud.map((obj)=>{return obj.id==studId? obj.date.split('T')[0]:''})}</span>
+            </div>
+            <div>
+              <img src="/images/online-training-woman.jpg" alt="" className=''/>
+            </div>
+          </div>
+          
             }
           </div>
         </div>
@@ -310,12 +326,7 @@ function CourseDetails() {
         )}
             </div>
            }
-           {/* {isEditOpen && (
-          <div className='absolute right-0 top-0 mt-8 mr-2 bg-white border rounded p-2'>
-            <button className='text-red-600 hover:text-red-800 mr-2' onClick={(e)=>handleReviewDelete(e)}>Delete</button>
-            <button className='text-blue-600 hover:text-blue-800' onClick={()=>setEdit(true)} >Edit</button>
-          </div>
-        )} */}
+          
         {edit && 
         <div className='fixed inset-0 flex  justify-center z-50 top-56 shadow-md'>
         <div className='bg-white h-44 w-96 rounded-md pb-10'>
@@ -348,12 +359,7 @@ function CourseDetails() {
         </div>
         </div>
         }
-           {/* <button
-      className='ml-auto text-gray-500 hover:text-red-500'
-   
-    >
-      <FontAwesomeIcon icon={faTrash} className='text-base'/>
-    </button> */}
+          
           </div>
           
           </div>

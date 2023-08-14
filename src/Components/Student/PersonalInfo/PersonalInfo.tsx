@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../../../services/axios'
 import { useSelector } from 'react-redux';
-import {validateInfo} from './ValidateInfo'
+import {validateInfo} from './ValidateInfo';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function PersonalInfo() {
 
   const{studId} = useSelector((state:any)=>state.student);
@@ -26,6 +29,13 @@ function PersonalInfo() {
     
     
   }
+  const notifySuccess = () => {
+    console.log('kmkjhugfcdfxsdfghjkjhgvbhjiuygtfcvbnhjkiuhygfvbnjiuygfvbnjko9i8uygvbhji98,uyhgvbnjuygtfv bnjuyhgv');  
+    toast.success('Profile updated', {
+      position: 'bottom-left',
+      autoClose: 1500,
+    });
+  };
   const handleInfoUpdate = async(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
     e.preventDefault();
     validateInfo(fname,lname,username,email,err,setErr);
@@ -33,6 +43,7 @@ function PersonalInfo() {
         const result = await api.post(`/update-info/${studId}`,{fname,lname,username,email},{ withCredentials: true })
         console.log(result);
         if(result){
+          console.log("asdfghj")
           setIsReadOnly(false);
         }
     }
@@ -120,7 +131,7 @@ function PersonalInfo() {
             </div>
             <button
               className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-24  hover:bg-gray-700 transition duration-150 ease-out"
-              onClick={(e)=>handleInfoUpdate(e)}
+              onClick={(e)=>{handleInfoUpdate(e)}}
             >
               Update
             </button>

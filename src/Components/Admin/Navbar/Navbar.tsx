@@ -62,7 +62,7 @@ function Navbar() {
         </div>
         <ul className="hidden md:flex space-x-3 text-sm">
           <li>
-            <button>
+            <button onClick={()=>navigate('/admin/dashboard')}>
               <span>Dashboard</span>
             </button>
           </li>
@@ -83,13 +83,14 @@ function Navbar() {
           </li>
           <li>
             <button 
-            onClick={handleLogout}
-            >
-              <span>Logout {admUsername}</span>
+            onClick={handleLogout}>
+              <span>Logout</span>
             </button>
-            {/* <button onClick={stud?()=>handleLogout:()=>navigate('/login')}>
-              <span>{stud?'Logout':'Login'}</span>
-            </button> */}
+          </li>
+          <li>
+            <button >
+              <span>{admUsername}</span>
+            </button>
           </li>
         </ul>
       </nav>

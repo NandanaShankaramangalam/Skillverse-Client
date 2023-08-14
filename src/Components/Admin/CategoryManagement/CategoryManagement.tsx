@@ -245,9 +245,6 @@ function CategoryManagement() {
 {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            {/* <div className='bg-custom-blue'>
-                <h2 className="text-lg font-bold mb-4 text-center text-white">Add Category</h2>
-            </div> */}
             <div className='flex justify-end'>
                 <button onClick={closeModal}><FontAwesomeIcon icon={faXmark}></FontAwesomeIcon></button>
             </div>
@@ -256,7 +253,6 @@ function CategoryManagement() {
               
               <div className="mb-3 mt-3">
             <label htmlFor="formInputControl1" className="text-sm ">
-              {/* Category:{addData.catname} */}
               Category
             </label>
             <input
@@ -268,21 +264,6 @@ function CategoryManagement() {
             />
           </div>
           <p className="text-red-600 text-sm mb-2">{errors.cate}</p>
-
-              {/* <div className="mb-3 mt-5">
-            <label htmlFor="formInputControl2" className="text-sm ">
-              Subcategory
-            </label>
-            <input
-              type="text"
-              id="formInputControl2"
-              className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-              name="subcategory"
-              onChange={addCate}
-            />
-          </div> */}
-          {/* <p className="text-red-600 text-sm">{errors.subcate}</p> */}
-
               <div className='flex justify-center'>
                 <button onClick={notifySuccess} className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
                  Add

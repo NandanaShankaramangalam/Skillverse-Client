@@ -3,7 +3,9 @@ import SideNavbar from '../SideNavbar/SideNavbar';
 import React, { useEffect, useState } from 'react'
 import { api } from '../../../services/axios'
 import { useSelector } from 'react-redux';
-import {validateInfo} from './ValidateInfo'
+import {validateInfo} from './ValidateInfo';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Profile() {
   const{studId} = useSelector((state:any)=>state.student);
@@ -25,14 +27,22 @@ function Profile() {
     setEmail(result.data.info.email)
     
   }
+  const notifySuccess = () => {
+      toast.success('Profile updated', {
+      position: toast.POSITION.BOTTOM_CENTER,
+      autoClose: 1500,
+    });
+  };
   const handleInfoUpdate = async(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
     e.preventDefault();
     validateInfo(fname,lname,username,email,err,setErr);
     if(err.fname === '' && err.lname === '' && err.username === '' && err.email === ''){
         const result = await api.post(`/update-info/${studId}`,{fname,lname,username,email},{ withCredentials: true })
-        console.log(result);
+        console.log("vvvhvhjhjh",result);
         if(result){
           setIsReadOnly(false);
+          notifySuccess();
+          // toast.success("success");
         }
     }
   }
@@ -40,7 +50,7 @@ function Profile() {
     <div>
         <Navbar/>
         <div className="grid grid-cols-7 gap-4">
-            <div className="md:col-span-2 col-span-7 bg-yellow-300">
+            <div className="md:col-span-2 col-span-7 bg-gray-100">
               <SideNavbar/>
             </div>
             <div className="md:col-span-5 col-span-7">
@@ -138,6 +148,7 @@ function Profile() {
 {/* ------------------------------------ */}
             </div>
         </div>
+      <ToastContainer />
         
     </div>
   )

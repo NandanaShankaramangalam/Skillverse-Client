@@ -47,7 +47,7 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
 
                 }
                 else{
-                  navigate('/tutor/dashboard');
+                  navigate('/tutor/tutor-dashboard');
                   console.log('home');
                 }
        }else{
@@ -83,7 +83,7 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
     console.log('aaa');
     
       localStorage.setItem('tutor',JSON.stringify(data))
-      navigate('/tutor/dashboard');
+      navigate('/tutor/tutor-dashboard');
   }
   if(data.invalid){    
    setErr({...err,invalid:data.invalid,password:''})

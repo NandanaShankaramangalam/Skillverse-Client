@@ -87,7 +87,8 @@ function CourseCreation(props : CourseProps) {
               console.log('Thumbnail location:', thumbnailLocation);
       
               if(videoLocation && thumbnailLocation){
-                const result = await api.post('/tutor/upload-class',{videoLocation,thumbnailLocation,title,description,courseId},{ withCredentials: true })
+                const id = new Date();
+                const result = await api.post('/tutor/upload-class',{videoLocation,thumbnailLocation,title,description,courseId,id},{ withCredentials: true })
                 console.log('result=',result);
                 console.log('res===',result.data);
                 

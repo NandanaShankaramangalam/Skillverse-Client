@@ -1,6 +1,8 @@
 import React from 'react'
 import { api } from '../../../services/axios'
 import { useEffect, useState } from 'react';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface studData{
     fname:string,
@@ -12,6 +14,9 @@ interface studData{
 }
 function StudentManagement() {
     const [data, setData] = useState<studData[]>([]);
+    const [isOpen,setIsOpen] = useState(false);
+    const [isUnblockOpen,setIsUnblockOpen] = useState(false);
+    const [id,setId] = useState('');
     // const [block,setBlock] = useState(false);
     useEffect(() => { 
         fetchData();
@@ -107,9 +112,9 @@ function StudentManagement() {
                 <td className="px-6 py-4 text-right">
                     {
                        item.status?
-                       <button className='rounded-full border px-5 py-2 border-green-600 bg-green-600 text-white mr-2' onClick={(e)=>handleBlock(e,item._id)}>Block</button>
+                       <button className='rounded-full border px-5 py-2 border-green-600 bg-green-600 text-white mr-2' onClick={(e)=>{setIsOpen(true);setId(item._id)}}>Block</button>
                        :
-                       <button className='rounded-full border px-3 py-2 border-red-600 bg-red-600 text-white mr-2' onClick={(e)=>handleUnblock(e,item._id)}>Unblock</button>
+                       <button className='rounded-full border px-3 py-2 border-red-600 bg-red-600 text-white mr-2' onClick={(e)=>{setIsUnblockOpen(true);setId(item._id)}}>Unblock</button>
                     }
                 
                 {/* <button className='rounded-full border px-3 py-2 border-red-600 bg-red-600 text-white'>Unblock</button> */}
@@ -120,6 +125,56 @@ function StudentManagement() {
         </tbody>
     </table>
 </div>
+{/* Block */}
+{isOpen &&
+<div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className='flex justify-end'>
+                <button onClick={()=>setIsOpen(false)}><FontAwesomeIcon icon={faXmark}></FontAwesomeIcon></button>
+            </div>
+            
+            <form>
+              
+              <div className="mb-3 mt-3">
+                <h1>Are you sure you want to block?</h1>
+              </div>
+              <div className='flex justify-center gap-1'>
+                <button onClick={(e)=>{handleBlock(e,id);setIsOpen(false)}} className="bg-red-700 text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
+                 Block
+                </button> 
+                <button onClick={()=>{setIsOpen(false)}} className="bg-green-800 text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
+                 Cancel
+                </button> 
+              </div>
+            </form>
+          </div>
+        </div>
+}
+{/* Unblock */}
+{isUnblockOpen &&
+<div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className='flex justify-end'>
+                <button onClick={()=>setIsUnblockOpen(false)}><FontAwesomeIcon icon={faXmark}></FontAwesomeIcon></button>
+            </div>
+            
+            <form>
+              
+              <div className="mb-3 mt-3">
+                <h1>Are you sure you want to block?</h1>
+              </div>
+              <div className='flex justify-center gap-1'>
+                <button onClick={(e)=>{handleUnblock(e,id);setIsUnblockOpen(false)}} className="bg-yellow-600 text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
+                 Unblock
+                </button> 
+                <button onClick={()=>{setIsUnblockOpen(false)}} className="bg-green-800 text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
+                 Cancel
+                </button> 
+              </div>
+            </form>
+          </div>
+        </div>
+}
 </div> 
 
   )

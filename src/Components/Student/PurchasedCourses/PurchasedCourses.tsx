@@ -2,7 +2,9 @@ import React, { useState,useEffect } from 'react'
 import SideNavbar from '../SideNavbar/SideNavbar';
 import Navbar from '../Navbar/Navbar';
 import { api } from '../../../services/axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { studentLogged } from '../../../redux/student/studentSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface Courses {
     _id: string;
@@ -21,6 +23,8 @@ interface Courses {
     bookmarks ?: [string],
   }
 function PurchasedCourses() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [courses,setCourses] = useState<Courses[]>([]);
     const studentSlice = useSelector((state:any)=>state.student);
     const studId = studentSlice.studId;
@@ -42,10 +46,12 @@ function PurchasedCourses() {
     <div>
         <Navbar/>
         <div className="grid grid-cols-7 gap-4">
-            <div className="md:col-span-2 col-span-7 bg-yellow-300">
+            <div className="md:col-span-2 col-span-7 bg-gray-100">
               <SideNavbar/>
             </div>
             <div className="md:col-span-5 col-span-7">
+              {
+                courses.length>0 ?
             <div className="mt-5 grid grid-cols-3 gap-1 pe-16 mb-5">
             {courses.map((course) => {
               return (
@@ -60,8 +66,8 @@ function PurchasedCourses() {
                       alt={course.title}
                       className=" rounded-md object-fill"
                       onClick={()=>{
-                        // dispatch(studentLogged({ ...studentSlice, selectedCourseId: course._id }));
-                        // navigate(`/course/${course._id}`);
+                        dispatch(studentLogged({ ...studentSlice, selectedCourseId: course._id }));
+                        navigate(`/course/${course._id}`,{state:course.tutId});
                       }}
                     />
                   </div>
@@ -71,33 +77,14 @@ function PurchasedCourses() {
                   <div className="pt-2 ps-1">
                   <p className="text-gray-400 line-clamp-2 text-sm">{course.description}</p>
                   </div>
-                  {/* <div className="pt-8 ps-1">
-                   {course.students?.includes(studId)?
-                    <span className="text-green-800">Purchased <FontAwesomeIcon icon={faCheck} /></span>
-                    :
-                    <button className="bg-yellow-500 text-black py-2 px-6 text-sm rounded-md hover:bg-yellow-400 transition duration-150 ease-out"
-                    onClick={()=>{
-                      dispatch(studentLogged({ ...studentSlice, selectedCourseId: course._id }));
-                      navigate(`/course/${course._id}`);
-                    }}>
-                      Purchase
-                    </button>
-                 }   
-                    <span className="text-gray-700 ps-32 font-bold">
-                      ${course.fee}
-                    </span>
-                  </div> */}
+                  
                   <div className="flex justify-between pt-3 mr-3">
                       <div>
                         <span className="text-gray-500 ps-2 font-bold">
                            ${course.fee}
                         </span>
                       </div>
-                      {/* <div className=''>
-                          {course.bookmarks?.includes(studId) &&
-                              <span onClick={()=>handleRemoveCourseBookmark(course._id)}><BsBookmarkFill/></span>
-                          }
-                      </div> */}
+                     
                   </div>
                   
                   </div>
@@ -105,6 +92,9 @@ function PurchasedCourses() {
               );
             })}
             </div>
+            :
+            <div>gjgggv</div>
+            }
 
             </div>
         </div>

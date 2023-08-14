@@ -50,7 +50,7 @@ function PayPal() {
               
              }
              console.log('edededededede');    
-             navigate(`/course/${courseId}`);
+             navigate(`/course/${courseId}`,{state:tutId});
            } 
         },
         onError : (err:any) => {

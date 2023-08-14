@@ -60,15 +60,15 @@ function Navbar() {
   </div>
   <ul className="hidden md:flex space-x-3 text-sm">
     <li className='cursor-pointer'>
-      <button onClick={()=>navigate('/tutor/dashboard')}>
+      <button onClick={()=>navigate('/tutor/tutor-dashboard')}>
         <span>Dashboard</span>
       </button>
     </li>
-    {/* <li>
-      <button>
-        <span>Students</span>
+    <li>
+      <button onClick={()=>navigate('/tutor/dashboard')}>
+        <span>Home</span>
       </button>
-    </li> */}
+    </li>
     {/* <li>
       <button >
         <span>Courses</span>

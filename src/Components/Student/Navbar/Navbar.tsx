@@ -133,7 +133,7 @@ function Navbar() {
               </button>
             )}
              {
-      studentSlice.studUsername && <button className='ml-2' onClick={()=>navigate('/dashboard')}><span>{studentSlice.studUsername}</span></button>
+      studentSlice.studUsername && <button className='ml-2' onClick={()=>navigate('/personal-info')}><span>{studentSlice.studUsername}</span></button>
       } 
 
       {/* <button 

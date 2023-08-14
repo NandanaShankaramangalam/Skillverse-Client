@@ -38,6 +38,9 @@ import TutorProfile from "./Pages/Student/TutorProfile";
 import StudentList from "./Pages/Tutor/StudentList";
 import CourseTutorials from "./Pages/Tutor/CourseTutorials";
 import MainDashboard from "./Pages/Tutor/MainDashboard";
+import ProtectedAdmin from "./Components/protectedAdmin";
+import ProtectedStudent from "./Components/protectedStudent";
+import ProtectedTutor from "./Components/protectedTutor";
 // import Profile from "./Components/Student/Profile/Profile";
 
 function App() {
@@ -84,25 +87,26 @@ function App() {
             path="/admin/category-management"
             Component={CategoryManagement}
           />
-          <Route path="/admin/dashboard" Component={AdminDashboard}/>
+          <Route path="/admin/dashboard" element={<ProtectedAdmin><AdminDashboard/></ProtectedAdmin>}/>
 
 
           <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>}/>
           <Route path="/reset-password" element={<ResetPassword></ResetPassword>}/>
           {/* <Route path="/personal-info" element={<StudentProfile></StudentProfile>}/> */}
-          <Route path="/personal-info" element={<Profile></Profile>}/>
+          <Route path="/personal-info" element={<ProtectedStudent><Profile/></ProtectedStudent>}/>
           <Route path="/tutors" element={<TutorList></TutorList>}/>
           <Route path="/view-tutor-profile" element={<TutorProfile></TutorProfile>}/>
-          <Route path='/students' element={<StudentList></StudentList>}/>
+         
  
           <Route path="/tutor/login" Component={TutorLoginForm} />
           <Route path="/tutor/home" Component={TutorHome} />
           <Route path="/tutor/dashboard" Component={TutorDashboard} />
-          <Route path={`/tutor/profile`} Component={ViewProfile} />
-          <Route path="/tutor/courses" Component={Courses}/>
-          <Route path={`/tutor/course/${courseId}`} Component={TutorCourseDetails}/>
+          <Route path={`/tutor/profile`} Component={ViewProfile} element={<ViewProfile/>}/>
+          <Route path="/tutor/courses" element={<ProtectedTutor><Courses/></ProtectedTutor>}/>
+          <Route path='/tutor/students' element={<ProtectedTutor><StudentList/></ProtectedTutor>}/>
+          <Route path={`/tutor/course/${courseId}`} element={<TutorCourseDetails/>}/>
           <Route path={`/course-tutorials/:courseId`} element={<CourseTutorials></CourseTutorials>}/>
-          <Route path={`/tutor/tutor-dashboard`} element={<MainDashboard></MainDashboard>}/>
+          <Route path={`/tutor/tutor-dashboard`} element={<ProtectedTutor><MainDashboard/></ProtectedTutor>}/>
           {/* <Route path='/tutor/video-upload' Component={VideoUpload}/> */}
 
           <Route path="/chat" element={<Chats role={'student'}></Chats>}/>

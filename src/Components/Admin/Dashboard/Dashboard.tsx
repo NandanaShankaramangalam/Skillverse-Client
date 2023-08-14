@@ -27,9 +27,9 @@ function Dashboard() {
   const [tutBlockCount,setTutBlockCount] = useState(0);
   const [barData,setBarData] = useState<BarDatas[]>([]);
     useEffect(()=>{
-      if(!admUsername){
-        navigate('/admin/login');
-      }
+      // if(!admUsername){
+      //   navigate('/admin/login');
+      // }
       
       const fetchPieChartData = async() =>{
         const res = await api.get('/admin/dashboard-details');
