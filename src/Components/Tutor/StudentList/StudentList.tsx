@@ -25,7 +25,7 @@ function StudentsList() {
   return (
     <div>
     <div className="grid grid-cols-7 gap-4">
-     <div className="md:col-span-2 col-span-7 bg-yellow-300"> 
+     <div className="md:col-span-2 col-span-7 bg-gray-100"> 
        <SideNavbar/>
      </div>
      <div className="md:col-span-5 col-span-7"> 

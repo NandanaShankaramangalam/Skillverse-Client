@@ -1,13 +1,16 @@
-import React from "react";
+import React,{ useEffect } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 function Home() {
   const navigate = useNavigate();
   const stud = localStorage.getItem('student');
+ 
+  
   if(stud){
     console.log('hello');
     
   }
+
   return (
     <div>
       <div className="grid grid-cols-4 gap-1 md:gap-3  mt-1 mb-8 md:mb-6 bg-custom-blue">

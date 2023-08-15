@@ -31,6 +31,7 @@ interface Courses {
   videoUrl?: string;
   thumbnailUrl?: string;
   bookmarks ?: [string],
+  Details ?:[]
 }
 function CourseList() {
   const navigate = useNavigate();
@@ -147,7 +148,7 @@ function CourseList() {
           {
             filteredSearchList.length>0?
           <div className="mt-5 grid grid-cols-3 gap-1 pe-16 mb-5">
-            {filteredSearchList.map((course) => {
+            {filteredSearchList.filter((item)=>item.Details?.length!==0).map((course) => {
               return (
                 <div
                   key={course._id}

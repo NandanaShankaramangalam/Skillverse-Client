@@ -12,7 +12,8 @@ interface tutor{
     username:string;
     firstName:string,
     lastName:string,
-    profileImg:string
+    profileLocation:string
+    // profileImg:string
 }
 export interface Chats{
     _id:string,

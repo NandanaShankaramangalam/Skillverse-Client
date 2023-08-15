@@ -41,6 +41,8 @@ import MainDashboard from "./Pages/Tutor/MainDashboard";
 import ProtectedAdmin from "./Components/protectedAdmin";
 import ProtectedStudent from "./Components/protectedStudent";
 import ProtectedTutor from "./Components/protectedTutor";
+import ErrorPages from "./Pages/Student/ErrorPage";
+// import ErrorPage from "./Components/ErrorPage/ErrorPage";
 // import Profile from "./Components/Student/Profile/Profile";
 
 function App() {
@@ -111,6 +113,7 @@ function App() {
 
           <Route path="/chat" element={<Chats role={'student'}></Chats>}/>
           <Route path="/tutor/chat" element={<Chats role={'tutor'}></Chats>}/>
+          <Route path="*" element={<ErrorPages></ErrorPages>}/>
         </Routes>
       </Router>
     </div>

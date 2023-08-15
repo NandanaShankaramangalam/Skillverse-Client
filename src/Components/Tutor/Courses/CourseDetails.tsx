@@ -45,18 +45,18 @@ function CourseDetails() {
         <div className='pe-36 pt-3 pb-7'>
           <p>{courseDetails.description}</p>
         </div>
-        <div className='pb-5 '>
+        {/* <div className='pb-5 '>
           <img src={`${process.env.REACT_APP_S3BUCKET_URL}/${courseDetails.thumbnail}`} alt={courseDetails.title} className='h-60'/>
-        </div>
+        </div> */}
         
-        <div className='bg-red-300 w-2/3'>
-         <h1 className='text-xl text-black mb-2'>Lessons in this class</h1>
+        <div className='bg-slate-100 w-2/3'>
+         <h1 className='text-xl cursor-pointer mb-2'>Lessons in this class</h1>
          {
            courseDetails.tutorial.map((item,index)=>{
             return(
              <> 
-             <div onClick={()=>navigate(`/course-tutorials/${courseDetails._id}`,{state:{video:item.video,Vtitle:item.title,Vdescription:item.description}})} className={`hover:bg-custom-blue  rounded-sm ps-2 py-3`}>
-              <h1 className='cursor-pointer hover:text-white'><FontAwesomeIcon icon={faCirclePlay} className=' hover:text-white font-thin mr-3 '/> 
+             <div onClick={()=>navigate(`/course-tutorials/${courseDetails._id}`,{state:{video:item.video,Vtitle:item.title,Vdescription:item.description}})} className={`hover:bg-custom-blue text-black hover:text-white  rounded-sm ps-2 py-3`}>
+              <h1 className='cursor-pointer '><FontAwesomeIcon icon={faCirclePlay} className=' hover:text-white font-thin mr-3 '/> 
               <span key={index}>{index+1}.</span> {item.title}</h1>
              </div>
              </>

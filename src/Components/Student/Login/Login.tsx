@@ -72,30 +72,6 @@ function Login(props: LoginProps) {
   //Handle Student Login
   const handleStudentLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // const { data } = await api.post(
-    //   "/student-login",
-    //   { ...student },
-    //   { withCredentials: true }
-    // );
-    // console.log("datatok=", data);
-
-    // if (data.student) {
-    //   localStorage.setItem("student", JSON.stringify(data));
-    // }
-    // console.log("ss=", student);
-
-    // if (data.invalid) {
-    //   setErr({ ...err, invalid: data.invalid });
-    //   return;
-    // }
-    // if (data.email) {
-    //   setErr({ ...err, email: data.email });
-    //   return;
-    // }
-    // if (data.password) {
-    //   setErr({ ...err, password: data.password });
-    //   return;
-    // }
     if (student.email.trim() === '') {
       setErr((prevState) => ({ ...prevState, email: 'Email cannot be empty' }));
     }
@@ -105,7 +81,11 @@ function Login(props: LoginProps) {
       }
      else {
           const {data} = await apiAuth.post('/student-login',{...student}, { withCredentials: true });
-          console.log('stud data=',data);
+          if(data){
+             console.log('stud data=',data);
+             handleAlert();
+          }
+         
           setErr((prevState) => ({ ...prevState, block: data.block }));
           if(data.student?.username && data.student?.email){
             dispatch(studentLogged({studUsername:data.student.username,studEmail:data.student.email,studId:data.student._id}))
@@ -136,8 +116,10 @@ function Login(props: LoginProps) {
     console.log('std=',student);
     
     const {data}=await api.post('/student-login',{email,password},{withCredentials:true})
-    console.log('dddd=',data);
-    
+    if(data){
+      console.log('dddd=',data);
+      handleAlert();
+    }
     if(data.student?.username && data.student?.email){
       dispatch(studentLogged({studUsername:data.student.username,studEmail:data.student.email,studId:data.student._id}))
     }
@@ -224,7 +206,7 @@ function Login(props: LoginProps) {
           >
             <button
               className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out"
-              onClick={(e)=>{handleStudentLogin(e);handleAlert()}}
+              onClick={(e)=>{handleStudentLogin(e);}}
             >
               Sign in
             </button>

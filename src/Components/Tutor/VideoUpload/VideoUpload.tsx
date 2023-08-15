@@ -61,6 +61,8 @@ function VideoUpload(props: VideoUpload) {
     // const [selectedVideo, setSelectedVideo] = useState<File | null>(null); // Initialize with an empty File object
 
     const [selectedThumbnail, setSelectedThumbnail] = useState<File>(new File([], ''))
+    const [isCatOpen, setIsCatOpen] = useState(false);
+    const [isSubcatOpen, setIsSubcatOpen] = useState(false);
     const [title, setTitle] = useState('');
     const [fee, setFee] = useState('');
     const [description, setDescription] = useState('');
@@ -175,7 +177,11 @@ try{
 
         if(videoLocation && thumbnailLocation){
           const result = await api.post('/tutor/create-course',{videoLocation,thumbnailLocation,title,fee,category,subcategory,description,tutId},{ withCredentials: true })
-          console.log('result=',result);
+          if(result){
+            console.log('result=',result);
+            props.setIsOpen(false);
+          }
+          
         }
       })
       .catch((error) => {
@@ -318,8 +324,7 @@ try{
 //         }
 //       }
     
-const [isCatOpen, setIsCatOpen] = useState(false);
-const [isSubcatOpen, setIsSubcatOpen] = useState(false);
+
 
   const toggleDropdown = () => {
     setIsCatOpen(!isCatOpen);

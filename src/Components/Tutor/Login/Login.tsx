@@ -290,7 +290,7 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
               </button>
             </p>
           </div>
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <button className="px-4 py-2 border flex gap-2 border-slate-200 rounded-md text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
               <img
                 className="w-4 h-5"
@@ -300,7 +300,7 @@ const [tutor, setTutor] = useState<TutorLogin>({ email: "", password: "" });
               />
               <span className="text-sm">Login with Google</span>
             </button>
-          </div>
+          </div> */}
           {props.userType == "tutor" ? (
             <div className="text-center mt-3 mb-2">
               <p className="text-sm">

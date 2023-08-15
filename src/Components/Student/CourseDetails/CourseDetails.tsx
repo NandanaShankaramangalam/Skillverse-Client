@@ -12,6 +12,7 @@ import {AiOutlineStar} from 'react-icons/ai'
 import { tutorLogged } from '../../../redux/tutor/tutorSlice';
 // import Ratings from '../Rating/Rating';
 import RatingsAndReviews from '../Rating/Rating';
+const ObjectId = require('bson-objectid');
 
 function CourseDetails() {
   const navigate = useNavigate();
@@ -99,6 +100,8 @@ function CourseDetails() {
     const result = await api.get(`/view-reviews/${courseId}`);
     console.log('allrev=',result.data.postedReviews);
     setAllReviews(result.data.postedReviews)
+    console.log('ghvghvghvghvghv=',ObjectId(studId));
+    
   }
 
   // Catch Rating value
@@ -372,7 +375,8 @@ function CourseDetails() {
        }
        {/* <div className='mt-2 ms-2'>
         <img src="/images/nophoto.png" alt="" className='h-10 bg-slate-800 rounded-full'/> */}
-        {courseDetails.students.includes(studId) ?
+        {courseDetails.students.includes(studId) && !allReviews.includes(ObjectId(studId))?
+       
           <div>
           <form action="">
           <div className='mt-3'>

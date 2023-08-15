@@ -120,9 +120,9 @@ function MainDashBoard() {
                       {index + 1}
                     </th>
                     <td className="px-6 py-4">{obj.title}</td>
-                    <td className="px-6 py-4">{obj.students.length - 1}</td>
+                    <td className="px-6 py-4">{(obj.students.length - 1) <  0 ? 0 : obj.students.length - 1}</td>
                     <td className="px-6 py-4">
-                      ${(obj.students.length - 1) * parseInt(obj.fee)}
+                     $ {((obj.students.length - 1) * parseInt(obj.fee)) < 0 ? 0 : (obj.students.length - 1) * parseInt(obj.fee)}
                     </td>
                   </tr>
                 ))}

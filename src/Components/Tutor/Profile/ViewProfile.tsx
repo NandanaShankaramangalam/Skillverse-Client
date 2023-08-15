@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import EditProfile from './EditProfile';
+import Footer from '../../Footer/Footer';
 
 
 function ViewProfile() {
@@ -25,6 +26,7 @@ function ViewProfile() {
   const [videoUrl, setVideoUrl] = useState<string>('');
   const { tutId,tutUsername } = useSelector((state: any) => state.tutor);
   const [isOpen,setIsOpen] = useState(false);
+  const [data,setData] = useState({});
   // profile && console.log('hiiiiiiiiii=',profile);
   
   useEffect(()=>{
@@ -65,14 +67,16 @@ function ViewProfile() {
     fetchProfileData();
 
   },[])
-
+  const dataFromChild = (data:any) =>{
+    console.log('frm child=',data);
+    
+  }
   return (
   
   <div>
     <Navbar/>
   <div className="grid grid-cols-7 gap-4 ">
   <div className="md:col-span-2 col-span-7 bg-gray-100 pt-12"> 
-  {/* <SideNavbar/> */}
   <div className='text-center mt-5'>
            <div className='w-32 h-32 rounded-full overflow-hidden mx-auto border border-black'>  
            <img src={`${process.env.REACT_APP_S3BUCKET_URL}/${profile}`} alt=""/> 
@@ -86,12 +90,8 @@ function ViewProfile() {
            <div className='bg-custom-blue rounded-md w-20 mx-auto'>
              <span className='text-neon-green text-sm font-bold'>Teacher</span>
            </div>
-           {/* <div className='mb-8 mt-5 w-60 mx-auto'>
-            <hr className='border border-black'/>
-           </div> */}
-        </div>
-       
-  </div>
+          </div>   
+    </div>
    
   <div className="md:col-span-5 col-span-7 "> 
 <div className='text-end mr-2 pt-2'>
@@ -111,17 +111,11 @@ function ViewProfile() {
 <div className='mt-5 mb-28'>
   <span className='font-bold text-xl'>About me</span>
   <p className="text-gray-700 mt-2 text-base whitespace-pre-line">{description}</p>
-  {/* {description.split('\n').map((paragraph, index) => (
-      <React.Fragment key={index}>
-        {paragraph}
-        <br />
-      </React.Fragment>
-    ))} */}
 </div>
-
   </div>
   </div>
-  {isOpen && <EditProfile isOpen={isOpen} setIsOpen={setIsOpen}/>}
+  {isOpen && <EditProfile isOpen={isOpen} setIsOpen={setIsOpen} callback={dataFromChild}/>}
+  <Footer/>
   </div>
   )
 }

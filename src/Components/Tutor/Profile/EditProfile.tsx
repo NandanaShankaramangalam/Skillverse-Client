@@ -5,10 +5,14 @@ import { useSelector } from 'react-redux';
 import {s3Config} from '../../../s3Config'
 import Resizer from "react-image-file-resizer";
 import { api } from '../../../services/axios';
-import AWS from 'aws-sdk'
+import AWS from 'aws-sdk';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 interface ProfileProps{
     isOpen : boolean;
     setIsOpen : Function;
+    callback : Function;
   }
   interface ErrState {
     image?: string;
@@ -53,8 +57,10 @@ function EditProfile(props:ProfileProps) {
       }
   }
 
-  const resizeFile = (file: File): Promise<Blob> =>
-  new Promise((resolve) => {
+  const resizeFile = (file: File): Promise<Blob> =>{
+    console.log('hhhhhhhhhpppppph');
+  
+  return new Promise((resolve) => {
     Resizer.imageFileResizer(
       file,
       300,
@@ -71,16 +77,17 @@ function EditProfile(props:ProfileProps) {
       },
       "blob"
     );
-  });
+  });}
     
   const uploadProfile = async (e: React.ChangeEvent<HTMLInputElement>,profileFile: any) => {
-      e.preventDefault();
-      
+      e.preventDefault(); 
+      console.log('profffffffffffffffff=',profileFile);
       
       const resizedProfileImage = await resizeFile(profileFile);
       console.log('kkkkkkkkkkk');
       const profileParams = {
         Body: resizedProfileImage as Blob,
+        // Body: profileFile as Blob,
         Bucket: s3Config.bucketName,
         Key: `profile/${profileFile.name}`
     };
@@ -103,7 +110,7 @@ function EditProfile(props:ProfileProps) {
     const uploadBanner = async (e: React.ChangeEvent<HTMLInputElement>,bannerFile: any) => {
         e.preventDefault();
         
-        
+        console.log('zzzzzzzzzzzz',bannerFile);
         const resizedBannerImage = await resizeFile(bannerFile);
         console.log('kkkkkkkkkkk');
         const bannerParams = {
@@ -150,14 +157,27 @@ function EditProfile(props:ProfileProps) {
         try{
          e.preventDefault();
          const result = await api.post(`/tutor/edit-profile/${tutId}`,{profileLocation,bannerLocation,niche,description,tutId},{ withCredentials: true })
-         console.log('result=',result);
+         if(result.data.isEdit){
+          console.log('result=',result.data);
+          props.setIsOpen(false);
+          notifySuccess();
+          props.callback({profileLocation,bannerLocation,niche,description,tutId});
+         }
+         
         }catch(err){
-    console.log(err); 
+         console.log(err); 
   }
       }
     const closeModal = () =>{
         props.setIsOpen(false)
      }
+
+     const notifySuccess = () => {
+      toast.success('Profile updated', {
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 1500,
+      });
+    };
   return (
     <div className=''>
     <div className="absolute inset-0  top-20 left-72 flex items-center justify-center z-50">
@@ -235,13 +255,13 @@ function EditProfile(props:ProfileProps) {
 
           <div className='flex justify-center'>
             <button onClick={(e) => handleEdit(e)}  className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
-             Add 
+             Update
             </button> 
           </div>
         </form>
       </div>
     </div>
-
+    <ToastContainer />
 
 </div>
   )

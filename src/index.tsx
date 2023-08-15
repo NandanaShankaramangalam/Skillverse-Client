@@ -11,7 +11,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement);
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         {/* <ChatProvider> */}
@@ -21,6 +21,6 @@ root.render(
         {/* </ChatProvider> */}
       </PersistGate> 
     </Provider> 
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
