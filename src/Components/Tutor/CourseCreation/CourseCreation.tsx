@@ -95,7 +95,8 @@ function CourseCreation(props : CourseProps) {
                 const result = await api.post('/tutor/upload-class',{videoLocation,thumbnailLocation,title,description,courseId,id},{ withCredentials: true })
                 console.log('result=',result);
                 console.log('res===',result.data);
-                // props.setEdit(true);
+                props.setIsOpen(false);
+                window.location.reload();
               }
             })
             .catch((error) => {

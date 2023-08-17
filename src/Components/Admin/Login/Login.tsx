@@ -83,6 +83,7 @@ function Login() {
 
         localStorage.setItem("admin", JSON.stringify(data));
         navigate("/admin/dashboard");
+        handleAlert();
       }
       if (data.invalid) {
         setErr({ ...err, invalid: data.invalid, password: "" });
@@ -151,7 +152,7 @@ function Login() {
               className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out"
               onClick={(e) => {
                 handleLogin(e);
-                handleAlert();
+                // handleAlert();
               }}
             >
               Sign in

@@ -188,6 +188,7 @@ function VideoUpload(props: VideoUpload) {
           if (result) {
             console.log("result=", result);
             props.setIsOpen(false);
+            window.location.reload();
           }
         }
       })
