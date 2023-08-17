@@ -37,12 +37,8 @@ function ViewProfile() {
         const profileData = await api.get(`/tutor/profile/${tutId}`)
         if(profileData.data.profileData){
         console.log('profdata=',profileData.data.profileData);
-        // if(profileData.data.profileData){
-         
-        // }
         const{profileLocation,bannerLocation,description,niche} = profileData.data.profileData
-        // console.log('profffffffdata=',profileData.data);
-        
+       
         setDescription(description);
         setImageUrl(bannerLocation)
         setProfile(profileLocation);
@@ -50,15 +46,6 @@ function ViewProfile() {
         console.log('bannerfile=',bannerLocation);
         console.log('profile=',profileLocation);
          }
-        // const params = {
-        //   Bucket: s3Config.bucketName,
-        //   Key: `${bannerLocation}`, // Provide the path to your uploaded image
-        // };
-        // console.log('url=',params.Key);
-        
-        // const url = await s3.getSignedUrlPromise('getObject', params);
-       
-        // console.log('uuuurrrll==',url);
 
       }catch (error) {
         console.error('Error retrieving the image:', error);

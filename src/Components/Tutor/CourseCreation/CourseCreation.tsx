@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 
 interface CourseProps {
     setIsOpen : (value : boolean) => void;
+    setEdit : Function;
 }
 function CourseCreation(props : CourseProps) {
     const [progress , setProgress] = useState(0);
@@ -28,6 +29,7 @@ function CourseCreation(props : CourseProps) {
     const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file: File | null = e.target.files?.[0] || null;
         setSelectedVideo(file as File);
+        console.log('sel vdo = ',selectedVideo)
       };
       
         const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,11 +89,13 @@ function CourseCreation(props : CourseProps) {
               console.log('Thumbnail location:', thumbnailLocation);
       
               if(videoLocation && thumbnailLocation){
+                console.log('abbbbaaaabbaaabb');
+                
                 const id = new Date();
                 const result = await api.post('/tutor/upload-class',{videoLocation,thumbnailLocation,title,description,courseId,id},{ withCredentials: true })
                 console.log('result=',result);
                 console.log('res===',result.data);
-                
+                // props.setEdit(true);
               }
             })
             .catch((error) => {
@@ -215,6 +219,7 @@ function CourseCreation(props : CourseProps) {
             <button onClick={(e)=>{
                 // closeModal();
                 handleCourseCreation(e);
+                // props.setIsOpen(false);
             }} 
             className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out" >
               Add

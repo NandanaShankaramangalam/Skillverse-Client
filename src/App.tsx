@@ -42,6 +42,10 @@ import ProtectedAdmin from "./Components/protectedAdmin";
 import ProtectedStudent from "./Components/protectedStudent";
 import ProtectedTutor from "./Components/protectedTutor";
 import ErrorPages from "./Pages/Student/ErrorPage";
+import ForgotPasswords from "./Components/Tutor/ForgotPassword/ForgotPassword";
+import ForgotPasswordTut from "./Pages/Tutor/ForgotPassword";
+import ResetTutPasswords from "./Components/Tutor/ForgotPassword/ResetPassword";
+import CourseAttend from "./Components/Student/CourseAttend/CourseAttend";
 // import ErrorPage from "./Components/ErrorPage/ErrorPage";
 // import Profile from "./Components/Student/Profile/Profile";
 
@@ -72,12 +76,12 @@ function App() {
           /> */}
 
           <Route path={`/course/${selectedCourseId}`} Component={CourseDetail}/>
-          <Route path="/profile" Component={StudentProfile} />
+          <Route path="/profile" element={<ProtectedStudent><StudentProfile/></ProtectedStudent>} />
           <Route path="/dashboard" Component={Dashboard} />
           <Route path="/paypal" Component={PayPal} />
-          <Route path={`/course-attend/:courseId`} Component={CoursesAttend} />
-          <Route path="/bookmarked-courses" element={<Bookmarks></Bookmarks>}/>
-          <Route path="/purchased-courses" element={<Purchased></Purchased>}/>
+          <Route path={`/course-attend/:courseId`} element={<ProtectedStudent><CourseAttend/></ProtectedStudent>}/>
+          <Route path="/bookmarked-courses" element={<ProtectedStudent><Bookmarks/></ProtectedStudent>}/>
+          <Route path="/purchased-courses" element={<ProtectedStudent><Purchased/></ProtectedStudent>}/>
           <Route path="/admin/login" Component={AdminLoginForm} />
           {/* <Route path="/admin/dashboard" Component={AdminDashboard} /> */}
           <Route
@@ -102,13 +106,15 @@ function App() {
  
           <Route path="/tutor/login" Component={TutorLoginForm} />
           <Route path="/tutor/home" Component={TutorHome} />
-          <Route path="/tutor/dashboard" Component={TutorDashboard} />
-          <Route path={`/tutor/profile`} Component={ViewProfile} element={<ViewProfile/>}/>
+          <Route path="/tutor/dashboard" element={<ProtectedTutor><TutorDashboard/></ProtectedTutor>}/>
+          <Route path={`/tutor/profile`} element={<ProtectedTutor><ViewProfile/></ProtectedTutor>}/>
           <Route path="/tutor/courses" element={<ProtectedTutor><Courses/></ProtectedTutor>}/>
           <Route path='/tutor/students' element={<ProtectedTutor><StudentList/></ProtectedTutor>}/>
           <Route path={`/tutor/course/${courseId}`} element={<TutorCourseDetails/>}/>
           <Route path={`/course-tutorials/:courseId`} element={<CourseTutorials></CourseTutorials>}/>
           <Route path={`/tutor/tutor-dashboard`} element={<ProtectedTutor><MainDashboard/></ProtectedTutor>}/>
+          <Route path="/tutor/forgot-password" element={<ForgotPasswordTut></ForgotPasswordTut>}/>
+          <Route path="/tutor/reset-password" element={<ResetTutPasswords></ResetTutPasswords>}/>
           {/* <Route path='/tutor/video-upload' Component={VideoUpload}/> */}
 
           <Route path="/chat" element={<Chats role={'student'}></Chats>}/>

@@ -8,7 +8,7 @@ function TutorDashboard() {
     <div>
         <Navbar/>   
         <Dashboard/>
-        {/* <Footer/> */}
+        <Footer/>
     </div>
   )
 }

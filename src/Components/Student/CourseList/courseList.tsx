@@ -5,11 +5,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { studentLogged } from "../../../redux/student/studentSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import {BsBookmark} from 'react-icons/bs';
-import {BsBookmarkFill} from 'react-icons/bs';
-import {BsSearch} from 'react-icons/bs'
+import { BsBookmark } from "react-icons/bs";
+import { BsBookmarkFill } from "react-icons/bs";
+import { BsSearch } from "react-icons/bs";
 import { serialize } from "v8";
-import './CourseList.css';
+import "./CourseList.css";
 interface CategoryData {
   category: string;
   subcategory: [string];
@@ -30,34 +30,34 @@ interface Courses {
   students?: [string];
   videoUrl?: string;
   thumbnailUrl?: string;
-  bookmarks ?: [string],
-  Details ?:[]
+  bookmarks?: [string];
+  Details?: [];
 }
 function CourseList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {selectedCategory} = useParams()
+  const { selectedCategory } = useParams();
   const studentSlice = useSelector((state: any) => state.student);
-  const studId = studentSlice.studId
+  const studId = studentSlice.studId;
   const [catData, setCatData] = useState<CategoryData[]>([]);
   const [courses, setCourses] = useState<Courses[]>([]);
-  const [isBookmark,setIsBookmark] = useState(false);
+  const [isBookmark, setIsBookmark] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredSearchList, setFilteredSearchList] = useState<Courses[]>([]);
 
-  useEffect(() => { 
+  useEffect(() => {
     fetchCatData();
     fetchCourseData();
-  }, [isBookmark,selectedCategory]);
+  }, [isBookmark, selectedCategory]);
 
   useEffect(() => {
-    console.log('ssee=');
-    
+    console.log("ssee=");
+
     const filteredList = courses.filter((item) => {
       const titleMatch = item.title
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
-      
+
       return titleMatch;
     });
     setFilteredSearchList(filteredList);
@@ -85,48 +85,56 @@ function CourseList() {
     }
   };
 
-  const handleCourseBookmark = async (courseId:string) =>{
-    try{
+  const handleCourseBookmark = async (courseId: string) => {
+    try {
       const response = await api.post(`/bookmark/${courseId}/${studId}`);
       console.log(response.data);
-      if(response){
+      if (response) {
         setIsBookmark(true);
       }
-    }catch (err) {
+    } catch (err) {
       console.error(err);
     }
-  }
-  const handleRemoveCourseBookmark = async (courseId:string) =>{
-    try{
+  };
+  const handleRemoveCourseBookmark = async (courseId: string) => {
+    try {
       const response = await api.post(`/remove-bookmark/${courseId}/${studId}`);
       console.log(response.data);
-      if(response){
+      if (response) {
         setIsBookmark(false);
       }
-    }catch (err) {
+    } catch (err) {
       console.error(err);
     }
-  }
+  };
   return (
     <div>
       <div className="grid grid-cols-7 gap-4 h-screen">
         <div className="md:col-span-2 col-span-7 bg-gray-100 pt-12 h-screen">
-          {
-            catData.map((obj)=>
-            <h1 onClick={()=>navigate(`/course-list/${obj.category}`)} className={`ps-36 mb-7 cursor-pointer ${obj.category === selectedCategory ?'bg-custom-blue py-3 text-white':''}`}>{obj.category}</h1>
-            )
-          }
+          {catData.map((obj) => (
+            <h1
+              onClick={() => navigate(`/course-list/${obj.category}`)}
+              className={`ps-36 mb-7 cursor-pointer ${
+                obj.category === selectedCategory
+                  ? "bg-custom-blue py-3 text-white"
+                  : ""
+              }`}
+            >
+              {obj.category}
+            </h1>
+          ))}
         </div>
         <div className="md:col-span-5 col-span-7  pt-6 overflow-y-scroll scrolling">
-         <div className="pb-1 flex justify-center">
-          <input type="search" className="border border-gray-300 h-10 outline-none rounded-md w-1/2 px-2"
-          placeholder={`search...`}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          />
-         </div>
-         <div className="flex justify-center pb-6">
-         </div>
+          <div className="pb-1 flex justify-center">
+            <input
+              type="search"
+              className="border border-gray-300 h-10 outline-none rounded-md w-1/2 px-2"
+              placeholder={`search...`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="flex justify-center pb-6"></div>
           <div className="pe-20" style={{ position: "relative" }}>
             <img
               src="\images\blue-bg.jpg"
@@ -145,70 +153,102 @@ function CourseList() {
               <span>Find what fascinates you as you explore these classes</span>
             </div>
           </div>
-          {
-            filteredSearchList.length>0?
-          <div className="mt-5 grid grid-cols-3 gap-1 pe-16 mb-5">
-            {filteredSearchList.filter((item)=>item.Details?.length!==0).map((course) => {
-              return (
-                <div
-                  key={course._id}
-                  className="bg-white w-72 h-auto rounded-md mb-5 shadow-lg"
-                >
-                  <div className="h-40 bg-slate-600 rounded-t-md ">
-                    <img
-                      src={`${process.env.REACT_APP_S3BUCKET_URL}/${course.thumbnail}`}
-                      alt={course.title}
-                      className=" rounded-md object-fill"
-                      onClick={()=>{
-                        dispatch(studentLogged({ ...studentSlice, selectedCourseId: course._id }));
-                        navigate(`/course/${course._id}`,{state:course.tutId});
-                      }}
-                    />
-                  </div>
-                  <div className="pt-2 ps-1">
-                    <h1 className="text-gray-700">{course.title}</h1>
-                      <div className="">
-                        <p className="text-gray-400 line-clamp-2 text-sm">{course.description}</p>
+          {filteredSearchList.length > 0 ? (
+            <div className="mt-5 grid grid-cols-3 gap-1 pe-16 mb-5">
+              {filteredSearchList
+                .filter((item) => item.Details?.length !== 0)
+                .map((course) => {
+                  return (
+                    <div
+                      key={course._id}
+                      className="bg-white w-72 h-auto rounded-md mb-5 shadow-lg"
+                    >
+                      <div className="h-40 bg-slate-600 rounded-t-md ">
+                        <img
+                          src={`${process.env.REACT_APP_S3BUCKET_URL}/${course.thumbnail}`}
+                          alt={course.title}
+                          className=" rounded-md object-fill"
+                          onClick={() => {
+                            dispatch(
+                              studentLogged({
+                                ...studentSlice,
+                                selectedCourseId: course._id,
+                              })
+                            );
+                            navigate(`/course/${course._id}`, {
+                              state: course.tutId,
+                            });
+                          }}
+                        />
                       </div>
-                  </div>
-                  <div className="pt-1 ps-1">
-                   {course.students?.includes(studId)?
-                    <span className="text-green-800">Purchased <FontAwesomeIcon icon={faCheck} /></span>
-                    :
-                    <button className="bg-yellow-500 text-black py-2 px-6 text-sm rounded-md hover:bg-yellow-400 transition duration-150 ease-out"
-                    onClick={()=>{
-                      dispatch(studentLogged({ ...studentSlice, selectedCourseId: course._id }));
-                      navigate(`/course/${course._id}`,{state:course.tutId});
-                    }}>
-                      Purchase
-                    </button>
-                 }   
-                    <span className="text-gray-700 ps-32 font-bold">
-                      ${course.fee}
-                    </span>
-                  </div>
-                  <div className="flex justify-between mr-3 pt-1">
-                    <span className="text-sm ml-2 text-gray-600">{course.subcategory}</span>
-                      {course.bookmarks?.includes(studId)?
-                      <span onClick={()=>handleRemoveCourseBookmark(course._id)}><BsBookmarkFill/></span>
-                      :
-                      <span onClick={()=>handleCourseBookmark(course._id)}><BsBookmark/></span>
-                       }
+                      <div className="pt-2 ps-1">
+                        <h1 className="text-gray-700">{course.title}</h1>
+                        <div className="">
+                          <p className="text-gray-400 line-clamp-2 text-sm">
+                            {course.description}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="pt-1 ps-1">
+                        {course.students?.includes(studId) ? (
+                          <span className="text-green-800">
+                            Purchased <FontAwesomeIcon icon={faCheck} />
+                          </span>
+                        ) : (
+                          <button
+                            className="bg-yellow-500 text-black py-2 px-6 text-sm rounded-md hover:bg-yellow-400 transition duration-150 ease-out"
+                            onClick={() => {
+                              dispatch(
+                                studentLogged({
+                                  ...studentSlice,
+                                  selectedCourseId: course._id,
+                                })
+                              );
+                              navigate(`/course/${course._id}`, {
+                                state: course.tutId,
+                              });
+                            }}
+                          >
+                            Purchase
+                          </button>
+                        )}
+                        <span className="text-gray-700 ps-32 font-bold">
+                          ${course.fee}
+                        </span>
+                      </div>
+                      <div className="flex justify-between mr-3 pt-1">
+                        <span className="text-sm ml-2 text-gray-600">
+                          {course.subcategory}
+                        </span>
+                        {course.bookmarks?.includes(studId) ? (
+                          <span
+                            onClick={() =>
+                              handleRemoveCourseBookmark(course._id)
+                            }
+                          >
+                            <BsBookmarkFill />
+                          </span>
+                        ) : (
+                          <span
+                            onClick={() => handleCourseBookmark(course._id)}
+                          >
+                            <BsBookmark />
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    
-                  </div>
-                
-              );
-            })
-          }
-           
+                  );
+                })}
             </div>
-            :
+          ) : (
             <div className="flex justify-center">
-            <img src="/images/no_results_found.png" alt="No results found" className="h-80"/>
-            </div> 
-}
-           
+              <img
+                src="/images/no_results_found.png"
+                alt="No results found"
+                className="h-80"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

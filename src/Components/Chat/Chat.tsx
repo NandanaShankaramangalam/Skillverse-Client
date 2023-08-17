@@ -19,9 +19,9 @@ function Chat(props: role) {
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessages] = useState<string>("");
   const [chatId, setChatId] = useState("");
-  const [tutName,setTutName] = useState("");
-  const [studName,setStudName] = useState("");
-  const [tutImg,setTutImg] = useState("");
+  const [tutName, setTutName] = useState("");
+  const [studName, setStudName] = useState("");
+  const [tutImg, setTutImg] = useState("");
   const [chats, setChats] = useState<Chats[]>([]);
   const [selectedUser, setselectedUser] = useState<Chats>();
   const currentUserId = props.role === "student" ? studId : tutId;
@@ -38,11 +38,6 @@ function Chat(props: role) {
     setNewMessages(e.target.value);
     console.log("kkk", newMessage);
   };
-
-  // const fetchAllChats=async(userId:string)=>{
-  //   const {data}=await api.get(`/employer/fetchChats/${userId}`)
-  //   return data.chats
-  // }
 
   useEffect(() => {
     const fetch = async () => {
@@ -72,16 +67,14 @@ function Chat(props: role) {
         setMessages([...messages, newMessage]);
       }
     });
-  },[socket,messages]);
+  }, [socket, messages]);
   //Fetch All Messages
   const handleMessageFetch = async (chatId: string) => {
     console.log("chtid=", chatId);
     const { data } = await api.get(`/message/${chatId}`);
-    console.log('okyyy=',data.messages);
+    console.log("okyyy=", data.messages);
     setMessages(data.messages);
-    
     socket.emit("join chat", chatId);
-    // return data.messages
   };
 
   //Message sending
@@ -113,7 +106,6 @@ function Chat(props: role) {
   };
 
   return (
-    // <div className='h-screen'>
     <div className="container mx-auto">
       <div className={`min-w-full border rounded lg:grid lg:grid-cols-3`}>
         <div className="border-r border-gray-300 lg:col-span-1">
@@ -153,13 +145,12 @@ function Chat(props: role) {
                       setChatId(obj._id);
                       handleMessageFetch(obj._id);
                       setTutName(obj.tutor.username);
-                      setTutImg(obj.tutor.profileLocation)
+                      setTutImg(obj.tutor.profileLocation);
                     }}
                   >
                     <a className="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none">
                       <img
                         className="object-cover w-10 h-10 rounded-full"
-                        // src="https://cdn.pixabay.com/photo/2018/09/12/12/14/man-3672010__340.jpg"
                         src={`${process.env.REACT_APP_S3BUCKET_URL}/${obj.tutor.profileLocation}`}
                         alt="username"
                       />
@@ -168,10 +159,6 @@ function Chat(props: role) {
                           <span className="block ml-2 font-semibold text-gray-600">
                             {obj.tutor.username}
                           </span>
-                          {/* <span className="block ml-2 text-sm text-gray-600">
-                            25 minutes
-                            src={`${process.env.REACT_APP_S3BUCKET_URL}/${imageUrl}`}
-                          </span> */}
                         </div>
                         <span className="block ml-2 text-sm text-gray-600">
                           {obj.latestMessage?.content}
@@ -187,7 +174,7 @@ function Chat(props: role) {
                       selectChat(obj);
                       setChatId(obj._id);
                       handleMessageFetch(obj._id);
-                      setStudName(obj.student.username)
+                      setStudName(obj.student.username);
                     }}
                   >
                     <a className="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none">
@@ -201,9 +188,6 @@ function Chat(props: role) {
                           <span className="block ml-2 font-semibold text-gray-600">
                             {obj.student.username}
                           </span>
-                          {/* <span className="block ml-2 text-sm text-gray-600">
-                            25 minutes
-                          </span> */}
                         </div>
                         <span className="block ml-2 text-sm text-gray-600">
                           {obj.latestMessage?.content}
@@ -214,175 +198,125 @@ function Chat(props: role) {
                 ))}
           </ul>
         </div>
-        {
-        studName || tutName ?
-        <div className="hidden lg:col-span-2 lg:block">
-          <div className="w-full">
-            {
-              props.role === "student" ?
-              <div className="relative flex items-center p-3 border-b border-gray-300">
-              <img
-                className="object-cover w-10 h-10 rounded-full"
-                src={`${process.env.REACT_APP_S3BUCKET_URL}/${tutImg}`}
-                alt="username"
-              />
-              <span className="block ml-2 font-bold text-gray-600">
-                {tutName}
-              </span>
-              <span className="absolute w-3 h-3 rounded-full left-10 top-3"></span>
-            </div>
-            :
-            <div className="relative flex items-center p-3 border-b border-gray-300">
-            <img
-              className="object-cover w-10 h-10 rounded-full border border-gray-300"
-              src="/images/nophoto.png"
-              alt="username"
-            />
-            <span className="block ml-2 font-bold text-gray-600">
-              {studName}
-            </span>
-            <span className="absolute w-3 h-3 rounded-full left-10 top-3"></span>
-          </div>
-            }
-    
-            <div className="relative w-full p-6 overflow-y-auto h-[30rem]">
-              <ul className="space-y-2">
-                {props.role === "student"
-                  ? messages.map((obj) => (
-                      <li
-                        key={obj._id}
-                        className={`${
-                          obj.student?._id && obj.student?._id === currentUserId
-                            ? "justify-end"
-                            : "justify-start"
-                        } flex `}
-                      >
-                        <div
-                          className={`relative max-w-xl px-4 py-2 text-gray-700 rounded shadow 
+        {studName || tutName ? (
+          <div className="hidden lg:col-span-2 lg:block">
+            <div className="w-full">
+              {props.role === "student" ? (
+                <div className="relative flex items-center p-3 border-b border-gray-300">
+                  <img
+                    className="object-cover w-10 h-10 rounded-full"
+                    src={`${process.env.REACT_APP_S3BUCKET_URL}/${tutImg}`}
+                    alt="username"
+                  />
+                  <span className="block ml-2 font-bold text-gray-600">
+                    {tutName}
+                  </span>
+                  <span className="absolute w-3 h-3 rounded-full left-10 top-3"></span>
+                </div>
+              ) : (
+                <div className="relative flex items-center p-3 border-b border-gray-300">
+                  <img
+                    className="object-cover w-10 h-10 rounded-full border border-gray-300"
+                    src="/images/nophoto.png"
+                    alt="username"
+                  />
+                  <span className="block ml-2 font-bold text-gray-600">
+                    {studName}
+                  </span>
+                  <span className="absolute w-3 h-3 rounded-full left-10 top-3"></span>
+                </div>
+              )}
+
+              <div className="relative w-full p-6 overflow-y-auto h-[30rem]">
+                <ul className="space-y-2">
+                  {props.role === "student"
+                    ? messages.map((obj) => (
+                        <li
+                          key={obj._id}
+                          className={`${
+                            obj.student?._id &&
+                            obj.student?._id === currentUserId
+                              ? "justify-end"
+                              : "justify-start"
+                          } flex `}
+                        >
+                          <div
+                            className={`relative max-w-xl px-4 py-2 text-gray-700 rounded shadow 
                   ${
                     obj.student?._id && obj.student?._id === currentUserId
                       ? "bg-gray-100"
                       : ""
                   }`}
+                          >
+                            <span className="block">{obj.content}</span>
+                          </div>
+                        </li>
+                      ))
+                    : messages.map((obj) => (
+                        <li
+                          className={`${
+                            obj.tutor?._id && obj.tutor?._id === currentUserId
+                              ? "justify-end"
+                              : "justify-start"
+                          } flex `}
                         >
-                          <span className="block">{obj.content}</span>
-                        </div>
-                      </li>
-                    ))
-                  : messages.map((obj) => (
-                      <li
-                        className={`${
-                          obj.tutor?._id && obj.tutor?._id === currentUserId
-                            ? "justify-end"
-                            : "justify-start"
-                        } flex `}
-                      >
-                        <div
-                          className={`relative max-w-xl px-4 py-2 text-gray-700 rounded shadow 
+                          <div
+                            className={`relative max-w-xl px-4 py-2 text-gray-700 rounded shadow 
                   ${
                     obj.tutor?._id && obj.tutor?._id === currentUserId
                       ? "bg-gray-100"
                       : ""
                   }`}
-                        >
-                          <span className="block">{obj.content}</span>
-                        </div>
-                      </li>
-                    ))}
-              </ul>
-            </div>
+                          >
+                            <span className="block">{obj.content}</span>
+                          </div>
+                        </li>
+                      ))}
+                </ul>
+              </div>
 
-            <div className="flex items-center justify-between w-full p-3 border-t border-gray-300">
-              {/* <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </button> */}
-              {/* <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                  />
-                </svg>
-              </button> */}
+              <div className="flex items-center justify-between w-full p-3 border-t border-gray-300">
+                <input
+                  type="text"
+                  placeholder="Message"
+                  className="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
+                  name="message"
+                  onChange={(e) => setMessageFn(e)}
+                  value={newMessage}
+                  required
+                />
 
-              <input
-                type="text"
-                placeholder="Message"
-                className="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
-                name="message"
-                onChange={(e) => setMessageFn(e)}
-                value={newMessage}
-                required
-              />
-              {/* <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                <button
+                  type="submit"
+                  onClick={() => {
+                    handleMessageSent();
+                  }}
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                  />
-                </svg>
-              </button> */}
-              <button
-                type="submit"
-                onClick={() => {
-                  handleMessageSent();
-                }}
-              >
-                <svg
-                  className="w-5 h-5 text-gray-500 origin-center transform rotate-90"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                </svg>
-              </button>
+                  <svg
+                    className="w-5 h-5 text-gray-500 origin-center transform rotate-90"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        :
-        <div className=" w-full col-span-2 pt-32">
-          <div className="flex justify-center  w-full">
-            <img src="/images/chat.png" alt="" className="h-56"/>
+        ) : (
+          <div className=" w-full col-span-2 pt-32">
+            <div className="flex justify-center  w-full">
+              <img src="/images/chat.png" alt="" className="h-56" />
+            </div>
+            <div className="pt-3 gap-y-2 text-center">
+              <h1 className="text-2xl font-semibold">You have messages</h1>
+              <h1 className="text-gray-500">Select a conversation to read</h1>
+            </div>
           </div>
-          <div className="pt-3 gap-y-2 text-center">
-            <h1 className="text-2xl font-semibold">You have messages</h1>
-            <h1 className="text-gray-500">Select a conversation to read</h1>
-          </div>
-        </div>
-}
+        )}
       </div>
     </div>
-    // </div>
   );
 }
 

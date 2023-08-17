@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import "./Home.css";
 function Home() {
   return (
@@ -7,9 +7,6 @@ function Home() {
         <div className="col-span-1 row-span-2  bg-gray-200">
           <img src="./images/art.jpg" alt="..." className="img-style" />
         </div>
-        {/* <div className="col-span-1 row-span-2 h-4/5 bg-gray-200">
-    <img src="./images/art.jpg" alt="Image 1" className="w-96 h-auto object-cover" />
-  </div> */}
         <div className="col-span-1 bg-gray-200">
           <img src="./images/knitting.jpg" alt="..." className="img-style" />
         </div>
@@ -74,7 +71,7 @@ function Home() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

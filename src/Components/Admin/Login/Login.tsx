@@ -1,141 +1,108 @@
-import React, { useEffect, useState } from 'react'
-import { api, apiAuth } from '../../../services/axios';
-import jwtDecode from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { api, apiAuth } from "../../../services/axios";
+import jwtDecode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { adminLogged } from '../../../redux/admin/adminSlice';
-import Swal from 'sweetalert2';
+import { adminLogged } from "../../../redux/admin/adminSlice";
+import Swal from "sweetalert2";
 type AdminLogin = {
-    username : string,
-    password : string  
- }
- interface ErrState {
-    username?: string
-    password?:string
-    invalid?: string;
-  }
+  username: string;
+  password: string;
+};
+interface ErrState {
+  username?: string;
+  password?: string;
+  invalid?: string;
+}
 function Login() {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const [admin,setAdmin] = useState<AdminLogin>({username:'',password:''});
-    const [err,setErr] = useState<ErrState>({});
-    
-    const addAdmin = ((e:React.ChangeEvent<HTMLInputElement>)=>{
-        setAdmin({...admin,[e.target.name]:e.target.value});
-    })
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [admin, setAdmin] = useState<AdminLogin>({
+    username: "",
+    password: "",
+  });
+  const [err, setErr] = useState<ErrState>({});
 
-    useEffect(()=>{
-      const adm = localStorage.getItem('admin');
-      console.log('adm=',adm);
-      if(adm){
-        console.log('jjj'); 
-        const token = JSON.parse(adm);
-        console.log('token=',token);
-        const decodedToken: any = jwtDecode(token.token);
-        // console.log('dec ',decodedToken);
-        const expirationTime = decodedToken.exp;
-        // console.log('token.token=',token.token)
-        if(token?.token){
-          console.log('kkk',expirationTime);
-          
-          if(expirationTime && expirationTime < Date.now() / 1000){
-            console.log('mmm');
-            
-            navigate('/admin/login');
-          }
-          else{
-            navigate('/admin/dashboard');
-          }
-        }else{
-          navigate('/admin/login');
-          
+  const addAdmin = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAdmin({ ...admin, [e.target.name]: e.target.value });
+  };
+
+  useEffect(() => {
+    const adm = localStorage.getItem("admin");
+    console.log("adm=", adm);
+    if (adm) {
+      console.log("jjj");
+      const token = JSON.parse(adm);
+      console.log("token=", token);
+      const decodedToken: any = jwtDecode(token.token);
+      const expirationTime = decodedToken.exp;
+      if (token?.token) {
+        console.log("kkk", expirationTime);
+
+        if (expirationTime && expirationTime < Date.now() / 1000) {
+          console.log("mmm");
+
+          navigate("/admin/login");
+        } else {
+          navigate("/admin/dashboard");
         }
-      }else{
-        navigate('/admin/login');
-        
+      } else {
+        navigate("/admin/login");
       }
-    },[])
-    // useEffect(()=>{
-    //     const adm = localStorage.getItem('admin');
-    //     console.log('adm==',adm);
-        
-    //     if(adm){
-    //         const token = JSON.parse(adm);
-  
-    //         const decodedToken: any = jwtDecode(token.token);
-    //         console.log('dec ',decodedToken);
-    //         const expirationTime = decodedToken.exp;
-
-    //         console.log('token.token=',token.token);
-    //       if(token?.token){
-    //         console.log('hiii');
-            
-    //       if(expirationTime && expirationTime < Date.now() / 1000){
-    //               // Token has expired, perform necessary actions (e.g., refresh token, log out)
-    //               // navigate('/login');
-    //               console.log('expired');
-                  
-    //             }
-    //             else{
-    //               navigate('/admin/dashboard');
-    //               console.log('home');
-    //             }
-    //    }
-    //     }
-    //     else{
-    //         // navigate('/login');
-    //         console.log('expirddd');
-            
-    //       }
-    // },[])
-
-    const handleLogin = async(e:React.FormEvent) =>{
-        e.preventDefault();
-        // console.log("ad=",admin);
-
-           if (admin.username.trim() === '') {
-            setErr((prevState) => ({ ...prevState, username: 'Username cannot be empty' }));
-          }
-          else  if (admin.password.trim() === '') {
-                setErr((prevState) => ({ ...prevState, username: '' }));
-                setErr((prevState) => ({ ...prevState, password: 'Password cannot be empty' }));
-            }
-           else {
-                const {data} = await apiAuth.post('/admin/admin-login',{...admin}, { withCredentials: true });
-                console.log('Admin dataaaa=',admin.username);
-                if(data.admin?.username){
-                  dispatch(adminLogged({admUsername:data.admin.username}))
-                }
-                
-        if(data.admin){ 
-          console.log('aaa');
-          
-            localStorage.setItem('admin',JSON.stringify(data))
-            navigate('/admin/dashboard');
-        }
-        if(data.invalid){    
-         setErr({...err,invalid:data.invalid,password:''})
-            return
-        }
-              
-          }
-        
-    
+    } else {
+      navigate("/admin/login");
     }
+  }, []);
 
-    const handleAlert = ()=>{
-      Swal.fire({
-        position: 'center', // This will center the alert on the screen
-        icon: 'success',
-        title: 'Login Successful',
-        showConfirmButton: false,
-        timer: 1500,
-        customClass: {
-          popup: 'center-alert', // Apply the custom CSS class
-        },
-      });
-      
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (admin.username.trim() === "") {
+      setErr((prevState) => ({
+        ...prevState,
+        username: "Username cannot be empty",
+      }));
+    } else if (admin.password.trim() === "") {
+      setErr((prevState) => ({ ...prevState, username: "" }));
+      setErr((prevState) => ({
+        ...prevState,
+        password: "Password cannot be empty",
+      }));
+    } else {
+      const { data } = await apiAuth.post(
+        "/admin/admin-login",
+        { ...admin },
+        { withCredentials: true }
+      );
+      console.log("Admin dataaaa=", admin.username);
+      if (data.admin?.username) {
+        dispatch(adminLogged({ admUsername: data.admin.username }));
+      }
+
+      if (data.admin) {
+        console.log("aaa");
+
+        localStorage.setItem("admin", JSON.stringify(data));
+        navigate("/admin/dashboard");
+      }
+      if (data.invalid) {
+        setErr({ ...err, invalid: data.invalid, password: "" });
+        return;
+      }
     }
+  };
+
+  const handleAlert = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Login Successful",
+      showConfirmButton: false,
+      timer: 1500,
+      customClass: {
+        popup: "center-alert",
+      },
+    });
+  };
   return (
     <div className=" w-full">
       <div className="flex justify-center mt-16 mb-6">
@@ -155,12 +122,14 @@ function Login() {
               onChange={addAdmin}
             />
           </div>
-          {err.username && <span className='text-sm text-red-600'>{err.username}</span>}
+          {err.username && (
+            <span className="text-sm text-red-600">{err.username}</span>
+          )}
           <div className="mb-1">
             <label htmlFor="formInputControl2" className="text-sm">
               Password*
             </label>
-            <input  
+            <input
               type="password"
               id="formInputControl2"
               className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
@@ -168,26 +137,33 @@ function Login() {
               onChange={addAdmin}
             />
           </div>
-          {err.password && <span className='text-sm text-red-600'>{err.password}</span>}
-          <div className="flex justify-end mb-4">
-            <a
-              href="#"
-              className="text-cyan-600 hover:text-cyan-700 text-sm ml-44"
+
+          {err.password && (
+            <span className="text-sm text-red-600">{err.password}</span>
+          )}
+
+          <div
+            className={`flex justify-center mt-4 ${
+              err.invalid ? "mb-2" : "mb-5"
+            }`}
+          >
+            <button
+              className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out"
+              onClick={(e) => {
+                handleLogin(e);
+                handleAlert();
+              }}
             >
-              Forgot password?
-            </a>
-          </div>
-          
-          <div className={`flex justify-center  ${err.invalid? 'mb-2':'mb-5'}`}>
-            <button className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md w-full hover:bg-gray-700 transition duration-150 ease-out" onClick={(e)=>{handleLogin(e);handleAlert()}}>
               Sign in
             </button>
           </div>
-          {err.invalid && <p className="text-red-600 text-sm mb-1">{err.invalid}</p>}
+          {err.invalid && (
+            <p className="text-red-600 text-sm mb-1">{err.invalid}</p>
+          )}
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

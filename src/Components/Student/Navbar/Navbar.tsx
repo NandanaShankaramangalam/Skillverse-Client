@@ -74,10 +74,12 @@ function Navbar() {
     <div>
       <nav className="bg-custom-blue text-white flex items-center justify-between h-20 px-4 md:px-6">
         <div className="ml-3">
-          <h1 className="text-xl font-bold">
+          {/* <h1 className="text-xl font-bold">
             <NavLink to="/">Skillverse</NavLink>
-          </h1>
-        </div>
+          </h1> */}
+          <div>
+            <img src="/images/skillverse-logo.png" alt="" className="w-44"/></div>
+          </div>
         <div className="md:hidden">
           <button
             className="flex items-center text-white focus:outline-none"

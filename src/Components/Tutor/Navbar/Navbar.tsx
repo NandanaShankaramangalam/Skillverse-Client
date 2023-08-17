@@ -31,12 +31,12 @@ function Navbar() {
         navigate('/tutor/login');
       }
   return (
-// <div>Navbar</div>
 <div>
 <nav className="bg-custom-blue text-white flex items-center justify-between h-20 px-4 md:px-6">
-  <div className="ml-3">
-    <h1 className="text-xl font-bold"><NavLink to='/tutor/home'>Skillverse</NavLink></h1>
-  </div>
+      <div>
+        <img src="/images/skillverse-logo.png" alt="" className="w-44"/>
+      </div>
+          
   <div className="md:hidden">
     <button
       className="flex items-center text-white focus:outline-none"
@@ -69,18 +69,7 @@ function Navbar() {
         <span>Home</span>
       </button>
     </li>
-    {/* <li>
-      <button >
-        <span>Courses</span>
-      </button>
-    </li> */}
     <li>
-      {/* <button 
-      onClick={handleLogout}
-      >
-        <span>Logout {tutUsername}</span>
-      </button> */}
-
       
       <button onClick={tutUsername?handleLogout:()=>navigate('/tutor/login')}>
         <span>{tutUsername?'Logout':'Login'}</span>
@@ -91,7 +80,6 @@ function Navbar() {
     </li>
   </ul>
 </nav>
-
 
 <div
   className={`w-full  md:hidden bg-custom-blue text-white  justify-center `}

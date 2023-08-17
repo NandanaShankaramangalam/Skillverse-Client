@@ -20,16 +20,13 @@ function SideNavbar() {
              <span className='text-neon-green text-sm font-bold'>Teacher</span>
            </div>
            <div className='mb-8 mt-5 w-60 mx-auto'>
-            {/* <hr className='border border-gray-300'/> */}
            </div>
         </div>
         <div className=' mb-72 pl-48 md:pl-32'>
             <ul className="space-y-4">
             <li className='cursor-pointer' onClick={()=>navigate('/tutor/courses')}><FontAwesomeIcon icon={faBook} className='text-lg text-cyan-600'/><span className='ml-4 text-base'>Courses</span></li>
-            {/* <li className='cursor-pointer' onClick={()=>navigate('/tutor/students')}><FontAwesomeIcon icon={faUsers} className='text-lg text-yellow-400'/><span className='ml-3 text-base'>Students</span></li> */}
             <li className='cursor-pointer' onClick={()=>navigate('/tutor/chat')}><FontAwesomeIcon icon={faMessage} className='text-lg text-violet-950'/><span className='ml-4 text-base'>Message</span></li>
-            {/* <li className='cursor-pointer'><FontAwesomeIcon icon={faCoins} className='text-lg text-red-800'/><span className='ml-4 text-base'>Revenue</span></li> */}
-            </ul>  
+             </ul>  
         </div>
     </div>
   )

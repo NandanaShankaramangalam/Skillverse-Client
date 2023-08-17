@@ -130,20 +130,7 @@ function Login(props: LoginProps) {
         navigate('/');
     }
   }
-  //Handle Tutor Login
-  // const handleTutorLogin = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   const { data } = await api.post(
-  //     "/tutor/tutor-login",
-  //     { ...tutor },
-  //     { withCredentials: true }
-  //   );
-  //   console.log("tut=", data);
-  //   if (data.tutor) {
-  //     console.log("tut okk");
-  //     localStorage.setItem("tutor", JSON.stringify(data));
-  //   }
-  // };
+ 
 
   const handleAlert = ()=>{
     Swal.fire({
@@ -236,17 +223,7 @@ function Login(props: LoginProps) {
               </button>
             </p>
           </div>
-          {/* <div className="flex justify-center">
-            <button className="px-4 py-2 border flex gap-2 border-slate-200 rounded-md text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
-              <img
-                className="w-4 h-5"
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                loading="lazy"
-                alt="google logo"
-              />
-              <span className="text-sm">Login with Google</span>
-            </button>
-          </div> */}
+         
           <div className="flex justify-center">
           <GoogleLogin size='medium'  onSuccess={credentialResponse => {gLogin(credentialResponse);}} onError={() => { console.log('Login Failed'); }}/>
           </div>

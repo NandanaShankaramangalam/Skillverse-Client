@@ -11,9 +11,6 @@ export const validate = (name:string,value:string,err:object,setErr:Function): v
         console.log('bbbb');
         
     }
-    // if(name === 'subcate'){
-    //     subcateValidate(value,err,setErr);
-    // }
  }
  
 
@@ -36,16 +33,3 @@ export const validate = (name:string,value:string,err:object,setErr:Function): v
     }
  }
 
-//  export const subcateValidate = (value:string,err:object,setErr:Function): void =>{
-   
-//     const subcateRegex : RegExp = /^([a-zA-z])([a-zA-Z,\s])+([^(?=.*,\s$)])$/gm
-//     if((value.trim()).length === 0){
-//         setErr({...err,subcate:'Subcategory field cannot be empty!'})
-//     }
-//     else if(!subcateRegex.test(value)){
-//         setErr({...err,subcate:'Enter a valid subcategory name'})
-//     }
-//     else{
-//         setErr({...err,subcate:''})
-//     }
-//  }

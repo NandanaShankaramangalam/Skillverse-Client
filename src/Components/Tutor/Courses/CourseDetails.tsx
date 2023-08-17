@@ -12,6 +12,7 @@ function CourseDetails() {
     const tutorSlice = useSelector((state:any)=>state.tutor);
     const courseId = tutorSlice.courseId;
     const [isOpen,setIsOpen] = useState(false);
+    const [edit,setEdit] = useState(false);
     useEffect(()=>{
         fetchData();
         console.log('cid=',courseId);
@@ -94,7 +95,7 @@ function CourseDetails() {
     </div> 
 
     <div>
-       {isOpen && <CourseCreation setIsOpen={setIsOpen}/>}
+       {isOpen && <CourseCreation setIsOpen={setIsOpen} setEdit={setEdit}/>}
     </div>
   </div>
   )

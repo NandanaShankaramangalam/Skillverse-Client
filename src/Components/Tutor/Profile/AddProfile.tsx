@@ -19,23 +19,6 @@ interface ErrState {
     niche?:string
   }
 
-// const S3_BUCKET =s3Config.bucketName;
-// const REGION =s3Config.region;
-
-// AWS.config.update({
-//   accessKeyId: s3Config.accessKeyId,
-//   secretAccessKey: s3Config.secretAccessKey
-// })
-
-// const myBucket = new AWS.S3({
-//   params: { Bucket: S3_BUCKET},
-//   region: REGION,
-// })
-
-
-// const myBucket = new AWS.S3({
-//   region: REGION,
-// });
 function AddProfile(props:ProfileProps) {
     
     const [progress , setProgress] = useState(0);
@@ -99,7 +82,6 @@ function AddProfile(props:ProfileProps) {
           .then(async([profileResponse, bannerResponse]) => {
             console.log('Video upload response:', profileResponse);
             console.log('Thumbnail upload response:', bannerResponse);
-            // `https://${s3Config.bucketName}.s3.${s3Config.region}.amazonaws.com/videos/vdo-126.mp4`
             const profileLocations = `${process.env.REACT_APP_S3BUCKET_URL}/${profileResponse.Key}`;
             const bannerLocations = `${process.env.REACT_APP_S3BUCKET_URL}/${bannerResponse.Key}`;
             
@@ -149,9 +131,6 @@ function AddProfile(props:ProfileProps) {
     <div>
         <div className="absolute inset-0  top-20 left-72 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg h-96 overflow-y-scroll  shadow-lg">
-            {/* <div className='bg-custom-blue'>
-                <h2 className="text-lg font-bold mb-4 text-center text-white">Add Category</h2>
-            </div> */}
             <div className='flex justify-end'>
                 <button onClick={closeModal}><FontAwesomeIcon icon={faXmark}></FontAwesomeIcon></button>
             </div>
@@ -177,7 +156,7 @@ function AddProfile(props:ProfileProps) {
              onChange={handleNicheChange}
              placeholder='eg : Artist and designer'
              className="bg-gray-200 hover:shadow-inner appearance-none border-0 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none" aria-describedby="file_input_help"/>
-             {/* <p className="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p> */}
+             
             </div>
             <p className="text-red-600 text-sm mb-1">{err.niche}</p>
 
@@ -217,8 +196,6 @@ function AddProfile(props:ProfileProps) {
             </form>
           </div>
         </div>
-    
-
     </div>
   )
 }
