@@ -110,7 +110,7 @@ function Chat(props: role) {
       <div className={`min-w-full border rounded lg:grid lg:grid-cols-3`}>
         <div className="border-r border-gray-300 lg:col-span-1">
           <div className="mx-3 my-3 ">
-            <div className="relative text-gray-600">
+            {/* <div className="relative text-gray-600">
               <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                 <svg
                   fill="none"
@@ -131,7 +131,7 @@ function Chat(props: role) {
                 placeholder="Search"
                 required
               />
-            </div>
+            </div> */}
           </div>
 
           <ul className="overflow-auto h-[32rem]">
