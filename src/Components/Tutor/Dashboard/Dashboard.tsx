@@ -75,7 +75,7 @@ function Dashboard() {
           )}
         </div>
       </div>
-      {isOpen && <VideoUpload setIsOpen={setIsOpen} />}
+      {isOpen && <VideoUpload setIsOpen={setIsOpen} isOpen={isOpen}/>}
     </div>
   );
 }

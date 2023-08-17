@@ -1,6 +1,6 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { api } from "../../../services/axios";
 import ReactS3Client from "react-aws-s3-typescript";
 import AWS from "aws-sdk";
@@ -9,10 +9,12 @@ import { myBucket } from "../../../s3Config";
 import { s3Config } from "../../../s3Config";
 import courseValidate from "./CourseValidate";
 import { useSelector } from "react-redux";
+import BtnLoading from "../../Loading/BtnLoading";
 
 interface VideoUpload {
   // setIsOpen: Function;
   setIsOpen: (value: boolean) => void;
+  isOpen : boolean
 }
 interface UploadDetails {
   title: string;
@@ -55,9 +57,10 @@ interface CategoryData {
 
 function VideoUpload(props: VideoUpload) {
   const [progress, setProgress] = useState(0);
+  const [isLoading,setIsLoading] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<File>(new File([], "")); // Initialize with an empty File object
   // const [selectedVideo, setSelectedVideo] = useState<File | null>(null); // Initialize with an empty File object
-
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [selectedThumbnail, setSelectedThumbnail] = useState<File>(
     new File([], "")
   );
@@ -132,6 +135,7 @@ function VideoUpload(props: VideoUpload) {
 
   const uploadFiles = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     if (!selectedVideo || !selectedThumbnail) {
       console.log("Please select both video and thumbnail files.");
       return;
@@ -187,6 +191,7 @@ function VideoUpload(props: VideoUpload) {
           );
           if (result) {
             console.log("result=", result);
+            setIsLoading(false);
             props.setIsOpen(false);
             window.location.reload();
           }
@@ -284,7 +289,8 @@ function VideoUpload(props: VideoUpload) {
   };
 
   const toggleDropdown = () => {
-    setIsCatOpen(!isCatOpen);
+    // setIsCatOpen(!isCatOpen);
+    setIsCatOpen((prevState) => !prevState);
   };
   const toggleSubcatDropdown = () => {
     setIsSubcatOpen(!isSubcatOpen);
@@ -340,7 +346,38 @@ function VideoUpload(props: VideoUpload) {
       console.log("nummm");
     }
   };
+  const closeDropdown = () => {
+    setIsCatOpen(false);
+  };
+  useEffect(() => {
+    const handleOutsideClick = (e:MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        closeDropdown();
+      }
+    };
+    const handleModalClick = (e: MouseEvent) => {
+      if (e.target instanceof Node && dropdownRef.current) {
+        if (dropdownRef.current.contains(e.target)) {
+          setIsCatOpen((prevOpen) => !prevOpen); // Toggle the dropdown when clicking on the modal
+        }
+      }
+    };
+    console.log('isssssssssssssssss===',isCatOpen);
 
+    
+    if (isCatOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener('click', handleModalClick);
+    } else {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('click', handleModalClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener("click", handleModalClick);
+    };
+  }, [isCatOpen]);
   return (
     <div className="absolute inset-0  top-20 left-72 flex items-center justify-center z-50 ">
       <div className="bg-white p-6 rounded-lg h-96 overflow-y-scroll  shadow-lg">
@@ -413,7 +450,7 @@ function VideoUpload(props: VideoUpload) {
               </label>
 
               {isCatOpen && (
-                <div className="overflow-y-scroll w-full h-32 absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
+                <div ref={dropdownRef} className="overflow-y-scroll w-full max-h-32 absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
                   <div className="py-1">
                     {catData.map((item, index) => {
                       return (
@@ -460,7 +497,7 @@ function VideoUpload(props: VideoUpload) {
               </label>
 
               {isSubcatOpen && (
-                <div className="absolute z-10 mt-2 overflow-y-scroll h-32 w-full bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
+                <div className="absolute z-10 mt-2 overflow-y-scroll max-h-32 w-full bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg outline-none right-0">
                   <div className="py-1">
                     {subCates.subcategory.map((item, index) => {
                       return (
@@ -540,8 +577,10 @@ function VideoUpload(props: VideoUpload) {
                   ></path>
                 </svg>
                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop
+                  <span className="font-semibold">Click to upload</span> 
+                </p>
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                  <span className="font-semibold">{selectedVideo.name}</span>
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   MP4, MOV, AVI, etc.
@@ -562,12 +601,19 @@ function VideoUpload(props: VideoUpload) {
           </div>
 
           <div className="flex justify-center mt-2">
-            <button
+            {
+              isLoading ? 
+              <button  className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
+              <BtnLoading/>
+              </button>
+              :
+              <button
               onClick={(e) => handleCourseCreation(e)}
-              className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out"
-            >
+              className="bg-custom-blue text-white py-2 px-6 text-sm rounded-md  hover:bg-gray-700 transition duration-150 ease-out">
               Add
             </button>
+            }
+            
           </div>
         </form>
       </div>

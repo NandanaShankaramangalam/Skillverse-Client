@@ -75,14 +75,14 @@ function Login(props: LoginProps) {
         { withCredentials: true }
       );
       console.log("tutor res=", data.block);
-      if(data){
+      if(data && !data.block){
         console.log('stud data=',data);
-        handleAlert();
+        
      }
     
       setErr((prevState) => ({ ...prevState, block: data.block }));
       console.log("tutor data=", data.tutor);
-      if (data.tutor?.username && data.tutor?.email)
+      if (data.tutor?.username && data.tutor?.email){
          dispatch(
           tutorLogged({
             tutUsername: data.tutor.username,
@@ -90,6 +90,8 @@ function Login(props: LoginProps) {
             tutId: data.tutor._id,
           })
         );
+        handleAlert();
+      }
       if (data.tutor) {
         console.log("aaa");
 
