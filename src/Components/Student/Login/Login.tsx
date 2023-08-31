@@ -81,7 +81,7 @@ function Login(props: LoginProps) {
       }
      else {
           const {data} = await apiAuth.post('/student-login',{...student}, { withCredentials: true });
-          if(data){
+          if(data.student){
              console.log('stud data=',data);
              handleAlert();
           }

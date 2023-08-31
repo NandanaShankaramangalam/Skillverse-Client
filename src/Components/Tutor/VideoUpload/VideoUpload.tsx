@@ -381,7 +381,9 @@ function VideoUpload(props: VideoUpload) {
   return (
     <div className="absolute inset-0  top-20 left-72 flex items-center justify-center z-50 ">
       <div className="bg-white p-6 rounded-lg h-96 overflow-y-scroll  shadow-lg">
-        <div className="flex justify-end">
+    {/* <div className="fixed inset-0 flex  justify-center z-50 top-0 ">
+      <div className="bg-white h-3/4 w-2/4 mt-10 rounded-md overflow-y-auto pb-10"> */}
+        <div className="flex justify-end pt-3 pe-3">
           <button onClick={closeModal}>
             <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
           </button>
