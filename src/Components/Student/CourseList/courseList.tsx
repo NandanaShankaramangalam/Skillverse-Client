@@ -10,6 +10,7 @@ import { BsBookmarkFill } from "react-icons/bs";
 import { BsSearch } from "react-icons/bs";
 import { serialize } from "v8";
 import "./CourseList.css";
+import { Pagination } from "./Pagination";
 interface CategoryData {
   category: string;
   subcategory: [string];
@@ -44,16 +45,22 @@ function CourseList() {
   const [isBookmark, setIsBookmark] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredSearchList, setFilteredSearchList] = useState<Courses[]>([]);
-
+  const [currentPage,setCurrentPage] = useState(1);
+  const [postsPerPage,setPostsPerPage] = useState(6);
+  const lastpostIndex = currentPage * postsPerPage;
+  const firstPostIndex = lastpostIndex - postsPerPage;
+  
   useEffect(() => {
     fetchCatData();
     fetchCourseData();
   }, [isBookmark, selectedCategory]);
 
+
   useEffect(() => {
     console.log("ssee=");
 
-    const filteredList = courses.filter((item) => {
+    // const filteredList = courses.filter((item) => {
+    const filteredList = currentPosts.filter((item) => {
       const titleMatch = item.title
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
@@ -61,7 +68,7 @@ function CourseList() {
       return titleMatch;
     });
     setFilteredSearchList(filteredList);
-  }, [searchQuery, courses]);
+  }, [searchQuery, courses, currentPage]);
 
   const fetchCatData = async () => {
     try {
@@ -84,6 +91,12 @@ function CourseList() {
       console.error(err);
     }
   };
+  //current posts
+  const currentPosts = courses.slice(firstPostIndex, lastpostIndex);
+  console.log('fpp=',firstPostIndex);
+  console.log('fpp=',lastpostIndex);
+  console.log('cppp=',currentPosts);
+  
 
   const handleCourseBookmark = async (courseId: string) => {
     try {
@@ -249,6 +262,14 @@ function CourseList() {
               />
             </div>
           )}
+          <div>
+            <Pagination 
+            totalPosts={courses.length} 
+            postsPerPage={postsPerPage} 
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage} 
+            />
+          </div>
         </div>
       </div>
     </div>
