@@ -135,7 +135,7 @@ function VideoUpload(props: VideoUpload) {
 
   const uploadFiles = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    // setIsLoading(true);
     if (!selectedVideo || !selectedThumbnail) {
       console.log("Please select both video and thumbnail files.");
       return;
@@ -175,6 +175,7 @@ function VideoUpload(props: VideoUpload) {
         console.log("Thumbnail location:", thumbnailLocation);
 
         if (videoLocation && thumbnailLocation) {
+          setIsLoading(true);
           const result = await api.post(
             "/tutor/create-course",
             {
@@ -341,7 +342,8 @@ function VideoUpload(props: VideoUpload) {
       err.thumbnail === "" &&
       err.video === ""
     ) {
-      console.log("nsn");
+      // setIsLoading(true);
+      console.log("err.title=",err.title);
       uploadFiles(e);
       console.log("nummm");
     }

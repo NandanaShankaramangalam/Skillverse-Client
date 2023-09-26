@@ -41,6 +41,7 @@ function CourseCreation(props : CourseProps) {
       
         const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           setTitle(e.target.value);
+
         };
       
         const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -104,18 +105,24 @@ function CourseCreation(props : CourseProps) {
             });
         };
       
-      
+      // if(err.title=='' && err.description=='' && err.thumbnail=='' && err.video==''){
         const handleCourseCreation = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             e.preventDefault();
             validate(title,description,selectedThumbnail,selectedVideo,err,setErr)
             console.log('err=',err);
-            if(err.title === '' && err.description === '' && err.thumbnail === '' && err.video === ''){
+            if(title&&description&&selectedThumbnail&&selectedVideo){
+              setErr({title:"",description:"",thumbnail:"",video:""})
+            }
+            if(err.title === '' && err.description === '' && err.thumbnail === '' && err.video === ''&&title&&description&&selectedThumbnail&&selectedVideo){
              console.log('nsn');
               uploadFiles(e)
             console.log('nummm');
             
             }
+           
           }
+      // }
+        
   
   return (
     <div className="absolute inset-0  top-20 left-72 flex items-center justify-center z-50 ">
